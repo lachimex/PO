@@ -29,6 +29,13 @@ public class Vector2d {
         return this.x <= other.x && this.y <= other.y;
     }
 
+    public boolean follows(Vector2d other){
+        if (other == null){
+            return false;
+        }
+        return this.x >= other.x && this.y >= other.y;
+    }
+
     public Vector2d add(Vector2d other){
         if (other == null){
             return null;
