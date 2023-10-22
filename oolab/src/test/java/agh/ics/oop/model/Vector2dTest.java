@@ -35,9 +35,9 @@ public class Vector2dTest {
         String s3 = vector3.toString();
 
         //then
-        Assertions.assertEquals(s1, "(1, 1)");
-        Assertions.assertEquals(s2, "(-1, -1)");
-        Assertions.assertEquals(s3, "(100, -100)");
+        Assertions.assertEquals("(1, 1)", s1);
+        Assertions.assertEquals("(-1, -1)", s2);
+        Assertions.assertEquals("(100, -100)", s3);
     }
 
     @Test
@@ -98,7 +98,7 @@ public class Vector2dTest {
         Vector2d vector3 = vector1.upperRight(vector2);
 
         //then
-        Assertions.assertEquals(vector3, new Vector2d(100, 1));
+        Assertions.assertEquals(new Vector2d(100, 1), vector3);
     }
 
     @Test
@@ -111,7 +111,7 @@ public class Vector2dTest {
         Vector2d vector3 = vector1.lowerLeft(vector2);
 
         //then
-        Assertions.assertEquals(vector3, new Vector2d(1, -100));
+        Assertions.assertEquals(new Vector2d(1, -100), vector3);
     }
 
     @Test
@@ -124,7 +124,7 @@ public class Vector2dTest {
         Vector2d vector3 = vector1.add(vector2);
 
         //then
-        Assertions.assertEquals(vector3, new Vector2d(101, -99));
+        Assertions.assertEquals(new Vector2d(101, -99), vector3);
     }
 
     @Test
@@ -137,7 +137,7 @@ public class Vector2dTest {
         Vector2d vector3 = vector1.substract(vector2);
 
         //then
-        Assertions.assertEquals(vector3, new Vector2d(-99, 101));
+        Assertions.assertEquals(new Vector2d(-99, 101), vector3);
     }
 
     @Test
@@ -153,8 +153,8 @@ public class Vector2dTest {
         Vector2d vector6 = vector3.opposite();
 
         //then
-        Assertions.assertEquals(vector4, new Vector2d(-1, -1));
-        Assertions.assertEquals(vector5, new Vector2d(-100, 100));
-        Assertions.assertEquals(vector6, new Vector2d(0, 0));
+        Assertions.assertEquals(new Vector2d(-1, -1), vector4);
+        Assertions.assertEquals(new Vector2d(-100, 100), vector5);
+        Assertions.assertEquals(new Vector2d(0, 0), vector6);
     }
 }
