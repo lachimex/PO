@@ -134,7 +134,7 @@ public class Vector2dTest {
         Vector2d vector2 = new Vector2d(100, -100);
 
         //when
-        Vector2d vector3 = vector1.substract(vector2);
+        Vector2d vector3 = vector1.subtract(vector2);
 
         //then
         Assertions.assertEquals(new Vector2d(-99, 101), vector3);
