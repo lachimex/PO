@@ -17,6 +17,14 @@ public class Animal {
         return animalPosition.toString() + " " + animalOrientation.toString();
     }
 
+    public MapDirection getAnimalOrientation() {
+        return animalOrientation;
+    }
+
+    public Vector2d getAnimalPosition(){
+        return animalPosition;
+    }
+
     public boolean isAt(Vector2d position){
         return animalPosition.equals(position);
     }
