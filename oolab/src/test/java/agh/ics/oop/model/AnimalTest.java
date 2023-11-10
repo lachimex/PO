@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnimalTest {
     @Test
-    public void testMoveRotationRight(){
+    public void testMoveRotation(){
         //given
         Animal animal1 = new Animal();
         Animal animal2 = new Animal(new Vector2d(2,3));
