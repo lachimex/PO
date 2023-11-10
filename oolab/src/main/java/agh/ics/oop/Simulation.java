@@ -9,11 +9,9 @@ import java.util.List;
 
 public class Simulation {
 
-    private List<Vector2d> animalPositions;
     private List<MoveDirection> animalMoves;
     private List<Animal> animals = new ArrayList<>();
     public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves) {
-        this.animalPositions = animalPositions;
         this.animalMoves = animalMoves;
         for (Vector2d animalPosition : animalPositions){
             animals.add(new Animal(animalPosition));
