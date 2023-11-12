@@ -7,13 +7,14 @@ import agh.ics.oop.model.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class Simulation {
 
-    private WorldMap worldMap;
+    private WorldMap<Animal, Vector2d> worldMap;
     private List<MoveDirection> animalMoves;
     private List<Animal> animals = new ArrayList<>();
-    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves, WorldMap worldMap) {
+    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves, WorldMap<Animal, Vector2d> worldMap) {
         this.animalMoves = animalMoves;
         this.worldMap = worldMap;
         for (Vector2d animalPosition : animalPositions){
