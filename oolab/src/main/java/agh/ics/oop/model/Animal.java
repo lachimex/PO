@@ -40,7 +40,7 @@ public class Animal {
             }
             case BACKWARD -> {
                 if (moveValidator.canMoveTo(animalPosition.subtract(animalOrientation.toUnitVector()))){
-                    animalPosition.subtract(animalOrientation.toUnitVector());
+                    animalPosition = animalPosition.subtract(animalOrientation.toUnitVector());
                 }
             }
         }
