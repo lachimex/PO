@@ -6,14 +6,13 @@ import java.util.List;
 
 public class TextMap implements WorldMap<StringTextMap, Integer>{
 
-    private List<StringTextMap> stringList;
-
-    public TextMap(List<StringTextMap> stringList) {
-        this.stringList = stringList;
-    }
+    private List<StringTextMap> stringList = new ArrayList<>();
 
     @Override
     public boolean place(StringTextMap string) {
+        if (stringList.contains(string)){
+            return false;
+        }
         stringList.add(string);
         return true;
     }

@@ -17,7 +17,7 @@ public class RectangularMap implements WorldMap<Animal, Vector2d>{
 
     @Override
     public boolean place(Animal animal) {
-        if (!canMoveTo(animal.getAnimalPosition())){
+        if (animals.containsValue(animal) || isOccupied(animal.getAnimalPosition())){
             return false;
         }
         else{

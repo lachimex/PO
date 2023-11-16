@@ -15,19 +15,20 @@ public class RectangularMapTest {
 
 
     @Test
+    public void placeTest(){
+        //then
+        assertTrue(rectangularMap.place(animal1));
+        assertTrue(rectangularMap.place(animal2));
+        assertFalse(rectangularMap.place(animal3));
+    }
+
+    @Test
     public void objectAtTest(){
         rectangularMap.place(animal1);
         rectangularMap.place(animal2);
 
         assertEquals(rectangularMap.objectAt(animal1.getAnimalPosition()), animal1);
         assertEquals(rectangularMap.objectAt(animal2.getAnimalPosition()), animal2);
-    }
-    @Test
-    public void placeTest(){
-        rectangularMap.place(animal1);
-        rectangularMap.place(animal2);
-        //then
-        assertFalse(rectangularMap.place(animal3));
     }
 
     @Test
