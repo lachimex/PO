@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class AnimalTest {
+    private MoveValidator moveValidator = new RectangularMap(5, 5);
     @Test
     public void testMoveRotation(){
         //given
@@ -12,8 +13,8 @@ public class AnimalTest {
         Animal animal2 = new Animal(new Vector2d(2,3));
 
         //when
-        animal1.move(MoveDirection.RIGHT);
-        animal2.move(MoveDirection.RIGHT);
+        animal1.move(MoveDirection.RIGHT, moveValidator);
+        animal2.move(MoveDirection.RIGHT, moveValidator);
 
         //then
         assertEquals(animal1.getAnimalPosition(), new Vector2d(2, 2));
@@ -22,10 +23,10 @@ public class AnimalTest {
         assertEquals(animal2.getAnimalOrientation(), MapDirection.EAST);
 
         //when
-        animal1.move(MoveDirection.LEFT);
-        animal1.move(MoveDirection.LEFT);
-        animal2.move(MoveDirection.LEFT);
-        animal2.move(MoveDirection.LEFT);
+        animal1.move(MoveDirection.LEFT, moveValidator);
+        animal1.move(MoveDirection.LEFT, moveValidator);
+        animal2.move(MoveDirection.LEFT, moveValidator);
+        animal2.move(MoveDirection.LEFT, moveValidator);
 
         //then
         assertEquals(new Vector2d(2, 2), animal1.getAnimalPosition());
@@ -41,18 +42,18 @@ public class AnimalTest {
         Animal animal2 = new Animal(new Vector2d(2,3));
 
         //when
-        animal1.move(MoveDirection.FORWARD);
-        animal2.move(MoveDirection.FORWARD);
+        animal1.move(MoveDirection.FORWARD, moveValidator);
+        animal2.move(MoveDirection.FORWARD, moveValidator);
 
         //then
         assertEquals(new Vector2d(2, 3), animal1.getAnimalPosition());
         assertEquals(new Vector2d(2, 4), animal2.getAnimalPosition());
 
         //when
-        animal1.move(MoveDirection.RIGHT);
-        animal1.move(MoveDirection.FORWARD);
-        animal2.move(MoveDirection.LEFT);
-        animal2.move(MoveDirection.FORWARD);
+        animal1.move(MoveDirection.RIGHT, moveValidator);
+        animal1.move(MoveDirection.FORWARD, moveValidator);
+        animal2.move(MoveDirection.LEFT, moveValidator);
+        animal2.move(MoveDirection.FORWARD, moveValidator);
 
         //then
         assertEquals(new Vector2d(3, 3), animal1.getAnimalPosition());
@@ -66,18 +67,18 @@ public class AnimalTest {
         Animal animal2 = new Animal(new Vector2d(2,3));
 
         //when
-        animal1.move(MoveDirection.BACKWARD);
-        animal2.move(MoveDirection.BACKWARD);
+        animal1.move(MoveDirection.BACKWARD, moveValidator);
+        animal2.move(MoveDirection.BACKWARD, moveValidator);
 
         //then
         assertEquals(new Vector2d(2, 1), animal1.getAnimalPosition());
         assertEquals(new Vector2d(2, 2), animal2.getAnimalPosition());
 
         //when
-        animal1.move(MoveDirection.RIGHT);
-        animal1.move(MoveDirection.BACKWARD);
-        animal2.move(MoveDirection.LEFT);
-        animal2.move(MoveDirection.BACKWARD);
+        animal1.move(MoveDirection.RIGHT, moveValidator);
+        animal1.move(MoveDirection.BACKWARD, moveValidator);
+        animal2.move(MoveDirection.LEFT, moveValidator);
+        animal2.move(MoveDirection.BACKWARD, moveValidator);
 
         //then
         assertEquals(new Vector2d(1, 1), animal1.getAnimalPosition());
@@ -91,10 +92,10 @@ public class AnimalTest {
         Animal animal2 = new Animal(new Vector2d(0, 0));
 
         //when
-        animal1.move(MoveDirection.FORWARD);
-        animal1.move(MoveDirection.FORWARD);
-        animal1.move(MoveDirection.FORWARD);
-        animal2.move(MoveDirection.BACKWARD);
+        animal1.move(MoveDirection.FORWARD, moveValidator);
+        animal1.move(MoveDirection.FORWARD, moveValidator);
+        animal1.move(MoveDirection.FORWARD, moveValidator);
+        animal2.move(MoveDirection.BACKWARD, moveValidator);
 
         //then
         assertEquals(new Vector2d(2, 4), animal1.getAnimalPosition());

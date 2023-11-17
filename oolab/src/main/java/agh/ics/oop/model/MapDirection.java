@@ -9,10 +9,10 @@ public enum MapDirection {
     @Override
     public String toString() {
         switch (this){
-            case NORTH -> {return "polnoc";}
-            case EAST -> {return "wschod";}
-            case SOUTH -> {return "poludnie";}
-            case WEST -> {return "zachod";}
+            case NORTH -> {return "N";}
+            case EAST -> {return "E";}
+            case SOUTH -> {return "S";}
+            case WEST -> {return "W";}
             default -> throw new IllegalArgumentException("direction not exist in real world");
         }
     }

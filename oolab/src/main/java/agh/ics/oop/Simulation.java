@@ -3,25 +3,33 @@ package agh.ics.oop;
 import agh.ics.oop.model.Animal;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
+import agh.ics.oop.model.WorldMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Vector;
 
 public class Simulation {
 
+    private WorldMap<Animal, Vector2d> worldMap;
     private List<MoveDirection> animalMoves;
     private List<Animal> animals = new ArrayList<>();
-    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves) {
+    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves, WorldMap<Animal, Vector2d> worldMap) {
         this.animalMoves = animalMoves;
+        this.worldMap = worldMap;
         for (Vector2d animalPosition : animalPositions){
-            animals.add(new Animal(animalPosition));
+            Animal animal = new Animal(animalPosition);
+            if (worldMap.place(animal)){
+                animals.add(animal);
+            }
         }
     }
 
     public void run(){
         for (int i = 0; i < animalMoves.size(); i++) {
-            animals.get(i % animals.size()).move(animalMoves.get(i));
-            System.out.println("Zwierzę " + i % animals.size() + " : " + animals.get(i % animals.size()));
+            Animal animal = animals.get(i % animals.size());
+            worldMap.move(animal, animalMoves.get(i));
+            System.out.println(worldMap);
         }
     }
 }

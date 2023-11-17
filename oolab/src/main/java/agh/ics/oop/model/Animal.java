@@ -14,7 +14,7 @@ public class Animal {
 
     @Override
     public String toString() {
-        return animalPosition.toString() + " " + animalOrientation.toString();
+        return animalOrientation.toString();
     }
 
     public MapDirection getAnimalOrientation() {
@@ -29,19 +29,17 @@ public class Animal {
         return animalPosition.equals(position);
     }
 
-    public void move(MoveDirection direction){
+    public void move(MoveDirection direction, MoveValidator moveValidator){
         switch (direction){
             case LEFT -> animalOrientation = animalOrientation.previous();
             case RIGHT -> animalOrientation = animalOrientation.next();
             case FORWARD -> {
-                if (animalPosition.add(animalOrientation.toUnitVector()).precedes(new Vector2d(4, 4))
-                    && animalPosition.add(animalOrientation.toUnitVector()).follows(new Vector2d(0, 0))){
+                if (moveValidator.canMoveTo(animalPosition.add(animalOrientation.toUnitVector()))){
                     animalPosition = animalPosition.add(animalOrientation.toUnitVector());
                 }
             }
             case BACKWARD -> {
-                if (animalPosition.subtract(animalOrientation.toUnitVector()).precedes(new Vector2d(4, 4))
-                        && animalPosition.subtract(animalOrientation.toUnitVector()).follows(new Vector2d(0, 0))){
+                if (moveValidator.canMoveTo(animalPosition.subtract(animalOrientation.toUnitVector()))){
                     animalPosition = animalPosition.subtract(animalOrientation.toUnitVector());
                 }
             }
