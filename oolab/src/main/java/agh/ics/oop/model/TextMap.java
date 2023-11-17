@@ -61,7 +61,7 @@ public class TextMap implements WorldMap<StringTextMap, Integer>{
     }
 
     @Override
-    public StringTextMap objectAt(Integer position) {
+    public Object objectAt(Integer position) {
         if (position >= stringList.size()){
             return null;
         }

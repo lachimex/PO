@@ -36,11 +36,11 @@ public class RectangularMap implements WorldMap<Animal, Vector2d>{
 
     @Override
     public boolean isOccupied(Vector2d position) {
-        return animals.containsKey(position);
+        return objectAt(position) != null;
     }
 
     @Override
-    public Animal objectAt(Vector2d position) {
+    public Object objectAt(Vector2d position) {
         return animals.get(position);
     }
 
