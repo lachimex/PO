@@ -19,8 +19,9 @@ public class Simulation {
         this.worldMap = worldMap;
         for (Vector2d animalPosition : animalPositions){
             Animal animal = new Animal(animalPosition);
-            animals.add(animal);
-            worldMap.place(animal);
+            if (worldMap.place(animal)){
+                animals.add(animal);
+            }
         }
     }
 
