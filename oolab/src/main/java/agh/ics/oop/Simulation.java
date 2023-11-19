@@ -11,10 +11,10 @@ import java.util.Vector;
 
 public class Simulation {
 
-    private WorldMap<Animal, Vector2d> worldMap;
+    private WorldMap worldMap;
     private List<MoveDirection> animalMoves;
     private List<Animal> animals = new ArrayList<>();
-    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves, WorldMap<Animal, Vector2d> worldMap) {
+    public Simulation(List<Vector2d> animalPositions, List<MoveDirection> animalMoves, WorldMap worldMap) {
         this.animalMoves = animalMoves;
         this.worldMap = worldMap;
         for (Vector2d animalPosition : animalPositions){
