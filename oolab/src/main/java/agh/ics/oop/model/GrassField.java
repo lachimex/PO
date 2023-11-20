@@ -7,15 +7,13 @@ import java.util.*;
 import static java.lang.Math.sqrt;
 
 public class GrassField extends AbstractWorldMap implements WorldMap{
-    private Random generator = new Random();
     private Map<Vector2d, Grass> grassMap = new HashMap<>();
 
     public GrassField(int numberOfGrass){
-        for (int i = 0; i < numberOfGrass; i++){
-            Vector2d grassPosition = new Vector2d(generator.nextInt((int)sqrt(numberOfGrass * 10)), generator.nextInt((int)sqrt(numberOfGrass * 10)));
-            while (grassMap.containsKey(grassPosition)){
-                grassPosition = new Vector2d(generator.nextInt((int)sqrt(numberOfGrass * 10)), generator.nextInt((int)sqrt(numberOfGrass * 10)));
-            }
+        int maxWidth = (int)sqrt(10 * numberOfGrass);
+        int maxHeight = (int)sqrt(10 * numberOfGrass);
+        RandomPositionGenerator randomPositionGenerator = new RandomPositionGenerator(maxWidth, maxHeight, numberOfGrass);
+        for(Vector2d grassPosition : randomPositionGenerator) {
             grassMap.put(grassPosition, new Grass(grassPosition));
         }
     }
