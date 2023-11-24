@@ -45,13 +45,13 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
             return new MapVisualizer(this).draw(new Vector2d(0,0), new Vector2d(1 , 1));
         }
         ArrayList<Vector2d> vector2dArrayList = new ArrayList<>(objectPositions);
-        Vector2d lowerLeft = vector2dArrayList.get(0);
-        Vector2d upperRight = vector2dArrayList.get(0);
+        Vector2d mapLowerLeft = vector2dArrayList.get(0);
+        Vector2d mapUpperRight = vector2dArrayList.get(0);
         for (Vector2d vector : vector2dArrayList){
-            lowerLeft = lowerLeft.lowerLeft(vector);
-            upperRight = upperRight.upperRight(vector);
+            mapLowerLeft = mapLowerLeft.lowerLeft(vector);
+            mapUpperRight = mapUpperRight.upperRight(vector);
         }
-        return new MapVisualizer(this).draw(lowerLeft, upperRight);
+        return new MapVisualizer(this).draw(mapLowerLeft, mapUpperRight);
     }
 
     @Override
