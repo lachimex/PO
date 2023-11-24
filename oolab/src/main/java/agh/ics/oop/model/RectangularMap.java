@@ -7,10 +7,14 @@ import java.util.Collection;
 public class RectangularMap extends AbstractWorldMap implements WorldMap{
     private int height;
     private int width;
+    private final Vector2d mapLowerLeft;
+    private final Vector2d mapUpperRight;
 
     public RectangularMap(int width, int height){
         this.height = height;
         this.width = width;
+        this.mapLowerLeft = new Vector2d(0, 0);
+        this.mapUpperRight = new Vector2d(width - 1, height - 1);
     }
 
     @Override
@@ -31,7 +35,7 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
     }
     @Override
     public String toString(){
-        return new MapVisualizer(this).draw(new Vector2d(0,0), new Vector2d(width - 1 , height - 1));
+        return new MapVisualizer(this).draw(mapLowerLeft, mapUpperRight);
     }
 
     @Override
