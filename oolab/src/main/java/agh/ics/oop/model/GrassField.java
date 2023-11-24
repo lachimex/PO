@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
@@ -30,7 +31,7 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
+    public WorldElement objectAt(Vector2d position){
         if (animalMap.containsKey(position)){
             return super.objectAt(position);
         } else return grassMap.getOrDefault(position, null);

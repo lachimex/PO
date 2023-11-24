@@ -1,5 +1,7 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,9 +9,9 @@ import java.util.Map;
 
 public abstract class AbstractWorldMap {
     protected Map<Vector2d, Animal> animalMap = new HashMap<>();
-    public boolean place(Animal animal) {
-        if (animalMap.containsValue(animal) || animalMap.containsKey(animal.getPosition())){
-            return false;
+    public boolean place(Animal animal) throws PositionAlreadyOccupiedException{
+        if (animalMap.containsKey(animal.getPosition())){
+            throw new PositionAlreadyOccupiedException(animal.getPosition());
         }
         else{
             animalMap.put(animal.getPosition(), animal);
@@ -17,7 +19,7 @@ public abstract class AbstractWorldMap {
         }
     }
 
-    public WorldElement objectAt(Vector2d position) {
+    public WorldElement objectAt(Vector2d position){
         return animalMap.get(position);
     }
 
