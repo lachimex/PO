@@ -27,8 +27,8 @@ public class RectangularMapTest {
         rectangularMap.place(animal1);
         rectangularMap.place(animal2);
 
-        assertEquals(rectangularMap.objectAt(animal1.getAnimalPosition()), animal1);
-        assertEquals(rectangularMap.objectAt(animal2.getAnimalPosition()), animal2);
+        assertEquals(rectangularMap.objectAt(animal1.getPosition()), animal1);
+        assertEquals(rectangularMap.objectAt(animal2.getPosition()), animal2);
     }
 
     @Test

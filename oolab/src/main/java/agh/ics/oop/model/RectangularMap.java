@@ -2,46 +2,29 @@ package agh.ics.oop.model;
 
 import agh.ics.oop.model.util.MapVisualizer;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Collection;
 
-public class RectangularMap implements WorldMap<Animal, Vector2d>{
-    private Map<Vector2d, Animal> animals = new HashMap<>();
+public class RectangularMap extends AbstractWorldMap implements WorldMap{
     private int height;
     private int width;
+    private final Vector2d mapLowerLeft;
+    private final Vector2d mapUpperRight;
 
     public RectangularMap(int width, int height){
         this.height = height;
         this.width = width;
+        this.mapLowerLeft = new Vector2d(0, 0);
+        this.mapUpperRight = new Vector2d(width - 1, height - 1);
     }
-
-    @Override
-    public boolean place(Animal animal) {
-        if (animals.containsValue(animal) || isOccupied(animal.getAnimalPosition())){
-            return false;
-        }
-        else{
-            animals.put(animal.getAnimalPosition(), animal);
-            return true;
-        }
-    }
-
 
     @Override
     public void move(Animal animal, MoveDirection direction) {
-        animals.remove(animal.getAnimalPosition());
-        animal.move(direction, this);
-        animals.put(animal.getAnimalPosition(), animal);
+        super.move(animal, direction, this);
     }
 
     @Override
-    public boolean isOccupied(Vector2d position) {
-        return objectAt(position) != null;
-    }
-
-    @Override
-    public Object objectAt(Vector2d position) {
-        return animals.get(position);
+    public WorldElement objectAt(Vector2d position) {
+        return animalMap.get(position);
     }
 
     @Override
@@ -50,9 +33,13 @@ public class RectangularMap implements WorldMap<Animal, Vector2d>{
                 position.follows(new Vector2d(0, 0)) &&
                 position.precedes(new Vector2d(width - 1, height - 1));
     }
-
     @Override
     public String toString(){
-        return new MapVisualizer(this).draw(new Vector2d(0,0), new Vector2d(width - 1 , height - 1));
+        return new MapVisualizer(this).draw(mapLowerLeft, mapUpperRight);
+    }
+
+    @Override
+    public Collection<WorldElement> getElements() {
+        return super.getElements();
     }
 }
