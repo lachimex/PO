@@ -25,8 +25,8 @@ public class Animal implements WorldElement{
         return animalPosition;
     }
 
-    public boolean isAt(Vector2d otherPosition){
-        return animalPosition.equals(otherPosition);
+    public boolean isAt(Vector2d position){
+        return animalPosition.equals(position);
     }
 
     public void move(MoveDirection direction, MoveValidator moveValidator){

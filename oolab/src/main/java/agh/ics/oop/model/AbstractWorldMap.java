@@ -20,7 +20,7 @@ public abstract class AbstractWorldMap{
     }
 
 
-    public void mapChanged(String message){
+    protected void mapChanged(String message){
         for (MapChangeListener observer : observatorList){
             observer.mapChanged(getWorldMap(), message);
         }
@@ -60,11 +60,12 @@ public abstract class AbstractWorldMap{
         return new ArrayList<>(animalMap.values());
     }
 
-    public abstract Boundary getCurrentBounds();
-    public abstract WorldMap getWorldMap();
+    protected abstract Boundary getCurrentBounds();
+    protected abstract WorldMap getWorldMap();
 
     @Override
     public String toString(){
-        return mapVisualizer.draw(getCurrentBounds().lowerLeft(), getCurrentBounds().upperRight());
+        mapBounds = getCurrentBounds();
+        return mapVisualizer.draw(mapBounds.lowerLeft(), mapBounds.upperRight());
     }
 }
