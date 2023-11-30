@@ -24,7 +24,7 @@ public class Simulation {
                 animals.add(animal);
                 worldMap.place(animal);
             } catch (PositionAlreadyOccupiedException e){
-                System.out.println(e);
+                e.printStackTrace();
                 animals.remove(animal);
             }
         }
