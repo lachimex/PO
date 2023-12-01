@@ -31,6 +31,11 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
     }
 
     @Override
+    public String getId() {
+        return "RectangularMap";
+    }
+
+    @Override
     public Boundary getCurrentBounds() {
         return mapBounds;
     }

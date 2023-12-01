@@ -12,19 +12,22 @@ public class World {
         try{
             List<MoveDirection> directions = OptionsParser.parse(args);
             List<Vector2d> positions = List.of(new Vector2d(3,4));
+
             GrassField grassField = new GrassField(10);
+            RectangularMap rectangularMap = new RectangularMap(10, 10);
+            rectangularMap.registerObservator(new ConsoleMapDisplay());
             grassField.registerObservator(new ConsoleMapDisplay());
-            Simulation simulation = new Simulation(positions, directions, grassField);
-            simulation.run();
+
+            List<Simulation> simulationList = new ArrayList<>();
+            simulationList.add(new Simulation(positions, directions, rectangularMap));
+            simulationList.add(new Simulation(positions, directions, grassField));
+
+            SimulationEngine simulationEngine = new SimulationEngine(simulationList);
+            simulationEngine.runAsync();
+
         } catch (IllegalArgumentException e){
-            System.out.println(e);
+            System.out.println(e.getMessage());
         }
-//        ArrayList<StringTextMap> stringList = new ArrayList<>();
-//        stringList.add(new StringTextMap("ala"));
-//        stringList.add(new StringTextMap("ma"));
-//        stringList.add(new StringTextMap("sowoniedzwiedzia"));
-//        TextMap textMap = new TextMap(stringList);
-//        textMap.run(directions);
     }
 
 }

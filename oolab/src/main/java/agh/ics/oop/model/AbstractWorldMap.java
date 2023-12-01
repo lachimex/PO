@@ -49,7 +49,6 @@ public abstract class AbstractWorldMap{
         if (!positionPrev.equals(animal.getPosition())){
             mapChanged(animal + positionPrev.toString() + " moved");
         }
-
     }
 
     public boolean isOccupied(Vector2d position) {

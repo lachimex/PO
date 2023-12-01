@@ -47,6 +47,11 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
         return worldElementList;
     }
 
+    @Override
+    public String getId() {
+        return "GrassField";
+    }
+
 
     @Override
     public Boundary getCurrentBounds() {
