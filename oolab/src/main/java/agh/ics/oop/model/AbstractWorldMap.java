@@ -26,7 +26,7 @@ public abstract class AbstractWorldMap {
     }
 
     public boolean place(Animal animal) throws PositionAlreadyOccupiedException{
-        if (animalMap.containsKey(animal.getPosition())){
+        if (getWorldMap().canMoveTo(animal.getPosition())){
             throw new PositionAlreadyOccupiedException(animal.getPosition());
         }
         else{

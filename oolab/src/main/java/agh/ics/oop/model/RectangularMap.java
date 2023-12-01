@@ -5,12 +5,8 @@ import agh.ics.oop.model.util.MapVisualizer;
 import java.util.Collection;
 
 public class RectangularMap extends AbstractWorldMap implements WorldMap{
-    private int height;
-    private int width;
 
     public RectangularMap(int width, int height){
-        this.height = height;
-        this.width = width;
         this.mapBounds = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
     }
 
@@ -27,8 +23,8 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
     @Override
     public boolean canMoveTo(Vector2d position) {
         return !isOccupied(position) &&
-                position.follows(new Vector2d(0, 0)) &&
-                position.precedes(new Vector2d(width - 1, height - 1));
+                position.follows(mapBounds.lowerLeft()) &&
+                position.precedes(mapBounds.upperRight());
     }
 
     @Override
