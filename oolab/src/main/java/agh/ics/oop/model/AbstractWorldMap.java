@@ -5,10 +5,11 @@ import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
 
-public abstract class AbstractWorldMap {
+public abstract class AbstractWorldMap{
     protected Map<Vector2d, Animal> animalMap = new HashMap<>();
     protected Boundary mapBounds;
     protected List<MapChangeListener> observatorList = new ArrayList<>();
+    private final MapVisualizer mapVisualizer = new MapVisualizer(getWorldMap());
 
     public void registerObservator(MapChangeListener observator){
         observatorList.add(observator);
@@ -19,7 +20,7 @@ public abstract class AbstractWorldMap {
     }
 
 
-    public void mapChanged(String message){
+    protected void mapChanged(String message){
         for (MapChangeListener observer : observatorList){
             observer.mapChanged(getWorldMap(), message);
         }
@@ -40,7 +41,7 @@ public abstract class AbstractWorldMap {
         return animalMap.get(position);
     }
 
-    public void move(Animal animal, MoveDirection direction, MoveValidator moveValidator){
+    protected void move(Animal animal, MoveDirection direction, MoveValidator moveValidator){
         Vector2d positionPrev = animal.getPosition();
         animalMap.remove(animal.getPosition());
         animal.move(direction, moveValidator);
@@ -59,11 +60,12 @@ public abstract class AbstractWorldMap {
         return new ArrayList<>(animalMap.values());
     }
 
-    public abstract Boundary getCurrentBounds();
-    public abstract WorldMap getWorldMap();
+    protected abstract Boundary getCurrentBounds();
+    protected abstract WorldMap getWorldMap();
 
     @Override
     public String toString(){
-        return new MapVisualizer(getWorldMap()).draw(getCurrentBounds().lowerLeft(), getCurrentBounds().upperRight());
+        mapBounds = getCurrentBounds();
+        return mapVisualizer.draw(mapBounds.lowerLeft(), mapBounds.upperRight());
     }
 }

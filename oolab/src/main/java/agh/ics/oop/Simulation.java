@@ -21,11 +21,10 @@ public class Simulation {
         for (Vector2d animalPosition : animalPositions){
             Animal animal = new Animal(animalPosition);
             try {
-                animals.add(animal);
                 worldMap.place(animal);
+                animals.add(animal);
             } catch (PositionAlreadyOccupiedException e){
-                System.out.println(e);
-                animals.remove(animal);
+                e.printStackTrace();
             }
         }
     }
