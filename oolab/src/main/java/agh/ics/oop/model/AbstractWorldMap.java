@@ -14,7 +14,6 @@ public abstract class AbstractWorldMap{
     public void registerObservator(MapChangeListener observator){
         observatorList.add(observator);
     }
-
     public void unregisterObservator(MapChangeListener observator){
         observatorList.remove(observator);
     }

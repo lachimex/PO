@@ -8,9 +8,8 @@ import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 
-public class Simulation {
+public class Simulation implements Runnable{
 
     private WorldMap worldMap;
     private List<MoveDirection> animalMoves;
@@ -23,8 +22,8 @@ public class Simulation {
             try {
                 worldMap.place(animal);
                 animals.add(animal);
-            } catch (PositionAlreadyOccupiedException e){
-                e.printStackTrace();
+            } catch (PositionAlreadyOccupiedException ignored){
+                System.out.println(ignored.getMessage());
             }
         }
     }
