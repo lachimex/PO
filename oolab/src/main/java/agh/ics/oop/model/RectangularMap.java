@@ -1,7 +1,5 @@
 package agh.ics.oop.model;
 
-import agh.ics.oop.model.util.MapVisualizer;
-
 import java.util.Collection;
 
 public class RectangularMap extends AbstractWorldMap implements WorldMap{
