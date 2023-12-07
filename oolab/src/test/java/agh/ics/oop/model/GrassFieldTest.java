@@ -1,5 +1,6 @@
 package agh.ics.oop.model;
 
+import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,18 +12,34 @@ public class GrassFieldTest {
     private Animal animal2 = new Animal(new Vector2d(1, 1));
     private Animal animal3 = new Animal(new Vector2d(1, 1));
 
+    private void placeAnimal1AndAnimal2(){
+        try{
+            grassField.place(animal1);
+            grassField.place(animal2);
+        } catch (PositionAlreadyOccupiedException e){
+            System.out.println("Placing animal1 and animal2 was not satisfied");
+        }
+    }
+
+
     @Test
     public void placeTest(){
         //then
-        assertTrue(grassField.place(animal1));
-        assertTrue(grassField.place(animal2));
-        assertFalse(grassField.place(animal3));
+        try{
+            assertTrue(grassField.place(animal1));
+            assertTrue(grassField.place(animal2));
+        } catch (PositionAlreadyOccupiedException e){
+            fail();
+        }
+        Exception exception = assertThrows(PositionAlreadyOccupiedException.class, () -> {
+            grassField.place(animal3);
+        });
+        assertEquals(exception.getMessage(), "Position (1, 1) is already occupied");
     }
 
     @Test
     public void objectAtTest(){
-        grassField.place(animal1);
-        grassField.place(animal2);
+        placeAnimal1AndAnimal2();
 
         assertEquals(grassField.objectAt(animal1.getPosition()), animal1);
         assertEquals(grassField.objectAt(animal2.getPosition()), animal2);
@@ -30,8 +47,7 @@ public class GrassFieldTest {
 
     @Test
     public void isOccupiedTest(){
-        grassField.place(animal1);
-        grassField.place(animal2);
+        placeAnimal1AndAnimal2();
         assertTrue(grassField.isOccupied(new Vector2d(3, 3)));
         assertTrue(grassField.isOccupied(new Vector2d(1, 1)));
         assertFalse(grassField.isOccupied(new Vector2d(0, 0)));
@@ -39,16 +55,14 @@ public class GrassFieldTest {
 
     @Test
     public void canMoveToTest(){
-        grassField.place(animal1);
-        grassField.place(animal2);
+        placeAnimal1AndAnimal2();
         assertFalse(grassField.canMoveTo(new Vector2d(3, 3)));
         assertTrue(grassField.canMoveTo(new Vector2d(3, 4)));
     }
 
     @Test
     public void moveTest(){
-        grassField.place(animal1);
-        grassField.place(animal2);
+        placeAnimal1AndAnimal2();
         grassField.move(animal1, MoveDirection.FORWARD);
         grassField.move(animal2, MoveDirection.FORWARD);
         assertTrue(grassField.isOccupied(new Vector2d(3, 4)));
