@@ -19,13 +19,13 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
             grassMap.put(grassPosition, new Grass(grassPosition));
             grassPositions.add(grassPosition);
         }
+        mapId = nextMapId++;
     }
 
     @Override
     public boolean canMoveTo(Vector2d position) {
         return !(objectAt(position) instanceof Animal);
     }
-
 
     @Override
     public void move(Animal animal, MoveDirection moveDirection) {
@@ -45,11 +45,6 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
         List<WorldElement> worldElementList = new ArrayList<>(super.getElements());
         worldElementList.addAll(grassSet);
         return worldElementList;
-    }
-
-    @Override
-    public String getId() {
-        return "GrassField";
     }
 
 

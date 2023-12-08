@@ -6,6 +6,7 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
 
     public RectangularMap(int width, int height){
         this.mapBounds = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
+        mapId = nextMapId++;
     }
 
     @Override
@@ -28,11 +29,6 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
     @Override
     public Collection<WorldElement> getElements() {
         return super.getElements();
-    }
-
-    @Override
-    public String getId() {
-        return "RectangularMap";
     }
 
     @Override
