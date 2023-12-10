@@ -53,7 +53,7 @@ public abstract class AbstractWorldMap{
         animal.move(direction, moveValidator);
         animalMap.put(animal.getPosition(), animal);
         if (!positionPrev.equals(animal.getPosition())){
-            mapChanged(animal + positionPrev.toString() + " moved");
+            mapChanged(animal + positionPrev.toString() + " moved to the position " + animal.getPosition().toString());
         }
     }
 

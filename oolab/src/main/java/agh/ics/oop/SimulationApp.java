@@ -18,15 +18,6 @@ public class SimulationApp extends Application {
         BorderPane viewRoot = loader.load();
         SimulationPresenter presenter = loader.getController();
         configureStage(primaryStage, viewRoot);
-
-        List<MoveDirection> directions = OptionsParser.parse(getParameters().getRaw());
-        List<Vector2d> positions = List.of(new Vector2d(3,4));
-        GrassField grassField = new GrassField(10);
-        grassField.registerObservator(new ConsoleMapDisplay());
-        grassField.registerObservator(presenter);
-        presenter.setWorldMap(grassField);
-
-        Simulation simulation = new Simulation(positions, directions, grassField);
         primaryStage.show();
     }
 
