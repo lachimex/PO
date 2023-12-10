@@ -41,9 +41,10 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
 
     @Override
     public Collection<WorldElement> getElements() {
-        Set<Grass> grassSet = new HashSet<>(grassMap.values());
+        Set<Grass> grassSet = new LinkedHashSet<>(grassMap.values());
         List<WorldElement> worldElementList = new ArrayList<>(super.getElements());
         worldElementList.addAll(grassSet);
+        Collections.reverse(worldElementList);
         return worldElementList;
     }
 

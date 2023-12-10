@@ -11,7 +11,8 @@
 <BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
             minHeight="550.0" minWidth="850.0"
-            fx:controller="agh.ics.oop.presenter.SimulationPresenter">
+            fx:controller="agh.ics.oop.presenter.SimulationPresenter"
+            fx:id="root">
 
     <center>
         <VBox alignment="CENTER">
@@ -28,7 +29,7 @@
 
     <bottom>
         <HBox alignment="CENTER">
-            <Button text="Start Simulation" onAction="#onSimulationStartClicked"/>
+            <Button fx:id="button" text="Start Simulation" onAction="#onSimulationStartClicked"/>
         </HBox>
     </bottom>
 

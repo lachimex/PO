@@ -5,17 +5,18 @@ import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-import org.w3c.dom.Node;
 
+import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -26,6 +27,18 @@ public class SimulationPresenter implements MapChangeListener {
     private TextField moveList;
     @FXML
     private Label moveLabel;
+    @FXML
+    private BorderPane root;
+
+
+    @FXML
+    public void initialize() {
+        root.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                onSimulationStartClicked();
+            }
+        });
+    }
 
 
     public void setWorldMap(WorldMap worldMap) {
@@ -40,21 +53,21 @@ public class SimulationPresenter implements MapChangeListener {
 
     private void drawMap() {
         clearGrid();
-        int columns = worldMap.getCurrentBounds().upperRight().getX() - worldMap.getCurrentBounds().lowerLeft().getX() + 2;
-        int rows = worldMap.getCurrentBounds().upperRight().getY() - worldMap.getCurrentBounds().lowerLeft().getY() + 2;
-        for (int col = 0; col < columns; col++) {
+        int columns = worldMap.getCurrentBounds().upperRight().getX() - worldMap.getCurrentBounds().lowerLeft().getX() + 1;
+        int rows = worldMap.getCurrentBounds().upperRight().getY() - worldMap.getCurrentBounds().lowerLeft().getY() + 1;
+        for (int col = 0; col <= columns; col++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(35));
         }
 
-        for (int row = 0; row < rows; row++) {
+        for (int row = 0; row <= rows; row++) {
             mapGrid.getRowConstraints().add(new RowConstraints(35));
         }
 
-        Label label0 = new Label("x\\y");
+        Label label0 = new Label("y\\x");
         GridPane.setHalignment(label0, HPos.CENTER);
         mapGrid.add(label0, 0, 0);
 
-        for (int i = 0; i < columns - 1; i++) {
+        for (int i = 0; i < columns; i++) {
             Label label = new Label(Integer.toString(worldMap.getCurrentBounds().lowerLeft().getX() + i));
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.add(label, i + 1, 0);
@@ -63,13 +76,18 @@ public class SimulationPresenter implements MapChangeListener {
         for (int i = 0; i < rows; i++) {
             Label label = new Label(Integer.toString(worldMap.getCurrentBounds().lowerLeft().getY() + i));
             GridPane.setHalignment(label, HPos.CENTER);
-            mapGrid.add(label, 0, worldMap.getCurrentBounds().upperRight().getY() - i + 1);
+            mapGrid.add(label, 0, rows - i);
         }
 
         List<WorldElement> worldElementList = worldMap.getElements().stream().toList();
         for (WorldElement element : worldElementList) {
             Label label = new Label(element.toString());
             GridPane.setHalignment(label, HPos.CENTER);
+            if (element instanceof Grass && worldMap.objectAt(element.getPosition()) instanceof Animal){
+                continue;
+            }
+            mapGrid.add(label, element.getPosition().getX() + 1 - worldMap.getCurrentBounds().lowerLeft().getX(),
+                    rows - element.getPosition().getY() + worldMap.getCurrentBounds().lowerLeft().getY());
         }
 
     }
@@ -85,7 +103,7 @@ public class SimulationPresenter implements MapChangeListener {
     public void onSimulationStartClicked() {
 
         List<MoveDirection> directions = OptionsParser.parse(moveList.getText().split(" "));
-        List<Vector2d> positions = List.of(new Vector2d(3,4), new Vector2d(1, 1));
+        List<Vector2d> positions = List.of(new Vector2d(0, 0));
 
         GrassField grassField = new GrassField(10);
         grassField.registerObservator(this);
