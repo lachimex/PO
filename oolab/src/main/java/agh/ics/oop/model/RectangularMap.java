@@ -6,6 +6,7 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
 
     public RectangularMap(int width, int height){
         this.mapBounds = new Boundary(new Vector2d(0, 0), new Vector2d(width - 1, height - 1));
+        mapId = nextMapId++;
     }
 
     @Override

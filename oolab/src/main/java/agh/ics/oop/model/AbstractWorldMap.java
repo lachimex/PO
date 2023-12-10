@@ -10,6 +10,12 @@ public abstract class AbstractWorldMap{
     protected Boundary mapBounds;
     protected List<MapChangeListener> observatorList = new ArrayList<>();
     private final MapVisualizer mapVisualizer = new MapVisualizer(getWorldMap());
+    public static int nextMapId = 0;
+    protected int mapId;
+
+    public String getId(){
+        return "Map id: " + mapId;
+    }
 
     public void registerObservator(MapChangeListener observator){
         observatorList.add(observator);
@@ -48,7 +54,6 @@ public abstract class AbstractWorldMap{
         if (!positionPrev.equals(animal.getPosition())){
             mapChanged(animal + positionPrev.toString() + " moved");
         }
-
     }
 
     public boolean isOccupied(Vector2d position) {
