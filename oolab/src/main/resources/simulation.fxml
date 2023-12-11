@@ -17,7 +17,9 @@
     <center>
         <VBox alignment="CENTER">
             <Label fx:id="moveLabel" textAlignment="CENTER"/>
-            <GridPane fx:id="mapGrid" gridLinesVisible="true"/>
+            <HBox alignment="CENTER">
+                <GridPane fx:id="mapGrid" gridLinesVisible="true"/>
+            </HBox>
         </VBox>
 
     </center>
