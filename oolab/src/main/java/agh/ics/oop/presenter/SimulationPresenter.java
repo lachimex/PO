@@ -2,8 +2,10 @@ package agh.ics.oop.presenter;
 
 import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
+import agh.ics.oop.SimulationApp;
 import agh.ics.oop.SimulationEngine;
 import agh.ics.oop.model.*;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 
@@ -15,8 +17,6 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
-
-import java.awt.event.KeyEvent;
 import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -108,6 +108,8 @@ public class SimulationPresenter implements MapChangeListener {
         GrassField grassField = new GrassField(10);
         grassField.registerObservator(this);
         setWorldMap(grassField);
+        SimulationApp simulationApp = new SimulationApp();
+        simulationApp.run();
         Simulation simulation = new Simulation(positions, directions, grassField);
         SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
         simulationEngine.runAsync();

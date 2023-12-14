@@ -21,7 +21,6 @@
                 <GridPane fx:id="mapGrid" gridLinesVisible="true"/>
             </HBox>
         </VBox>
-
     </center>
 
 

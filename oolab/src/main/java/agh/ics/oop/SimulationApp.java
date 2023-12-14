@@ -2,14 +2,13 @@ package agh.ics.oop;
 
 import agh.ics.oop.presenter.SimulationPresenter;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
-import agh.ics.oop.model.*;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SimulationApp extends Application {
     public void start(Stage primaryStage) throws IOException {
@@ -27,5 +26,15 @@ public class SimulationApp extends Application {
         primaryStage.setTitle("Simulation app");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
+    }
+
+    public void run(){
+        Platform.runLater(() -> {
+            try {
+                start(new Stage());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 }
