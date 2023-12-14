@@ -24,22 +24,7 @@ public class SimulationPresenter implements MapChangeListener {
     @FXML
     private GridPane mapGrid;
     @FXML
-    private TextField moveList;
-    @FXML
     private Label moveLabel;
-    @FXML
-    private BorderPane root;
-
-
-    @FXML
-    public void initialize() {
-        root.setOnKeyPressed(event -> {
-            if (event.getCode() == KeyCode.ENTER) {
-                onSimulationStartClicked();
-            }
-        });
-    }
-
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
@@ -98,20 +83,5 @@ public class SimulationPresenter implements MapChangeListener {
             drawMap();
             moveLabel.setText(message);
         });
-    }
-
-    public void onSimulationStartClicked() {
-
-        List<MoveDirection> directions = OptionsParser.parse(moveList.getText().split(" "));
-        List<Vector2d> positions = List.of(new Vector2d(0, 0));
-
-        GrassField grassField = new GrassField(10);
-        grassField.registerObservator(this);
-        setWorldMap(grassField);
-        SimulationApp simulationApp = new SimulationApp();
-        simulationApp.run();
-        Simulation simulation = new Simulation(positions, directions, grassField);
-        SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
-        simulationEngine.runAsync();
     }
 }

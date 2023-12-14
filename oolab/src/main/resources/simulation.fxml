@@ -24,14 +24,4 @@
     </center>
 
 
-    <top>
-        <TextField fx:id="moveList"/>
-    </top>
-
-    <bottom>
-        <HBox alignment="CENTER">
-            <Button fx:id="button" text="Start Simulation" onAction="#onSimulationStartClicked"/>
-        </HBox>
-    </bottom>
-
 </BorderPane>
