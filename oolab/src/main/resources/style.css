@@ -1,0 +1,13 @@
+.root{
+    -fx-background-color: lightblue;
+}
+
+.menu-button{
+    -fx-color: lightgreen;
+    -fx-padding: 50px;
+}
+
+.menu-button:hover{
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;}
+

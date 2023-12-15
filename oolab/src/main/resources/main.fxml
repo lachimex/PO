@@ -10,14 +10,15 @@
             xmlns:fx="http://javafx.com/fxml"
             fx:controller="agh.ics.oop.presenter.InitSimulationPresenter"
             minHeight="400.0" minWidth="600.0"
-            fx:id="root">
+            fx:id="root"
+            stylesheets="style.css">
 
     <top>
         <TextField fx:id="moveList"/>
     </top>
 
     <center>
-            <Button text="Start Simulation" onAction="#displayAnotherSim"/>
+            <Button text="Start Simulation" styleClass="menu-button" onAction="#displayAnotherSim"/>
     </center>
 
 </BorderPane>
