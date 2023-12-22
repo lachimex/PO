@@ -12,7 +12,7 @@ public class Animal {
     private MapDirection direction = MapDirection.NORTH;
     private int activeGen;
     private int energy;
-    private int childCounter;
+    int childCounter;
     private int plantEatenCounter;
     private int age;
     boolean alive;
@@ -75,6 +75,8 @@ public class Animal {
         }
         this.setEnergy(this.getEnergy() - globalSettings.energyLossDuringReproduction());
         secondParent.setEnergy(this.getEnergy() - globalSettings.energyLossDuringReproduction());
+        this.childCounter += 1;
+        secondParent.childCounter += 1;
         List<Integer> gensOfChild = new ArrayList<>();
         if (side == 0){
             gensOfChild.addAll(strongerAnimal.genList.subList(0, indexOfCrossingGens + 1));
