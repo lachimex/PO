@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Animal {
+    GlobalSettings globalSettings;
     private List<Integer> genList;
     private List<Animal> descendantList = new ArrayList<>();
     private Random random = new Random();
@@ -16,9 +17,10 @@ public class Animal {
     private int age;
     boolean alive;
     private int dayOfDeath;
-    public Animal(List<Integer> genList, int initialEnergy) {
+    public Animal(List<Integer> genList, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
-        this.energy = initialEnergy;
+        this.globalSettings = globalSettings;
+        this.energy = energy;
         this.childCounter = 0;
         this.plantEatenCounter = 0;
         this.age = 0;
@@ -36,19 +38,23 @@ public class Animal {
         }
     }
 
-    void eat(int energyAdded){
-        energy += energyAdded;
+    void eat(){
+        energy += globalSettings.energyGainOnEat();
     }
 
-    Animal produce(Animal secondParent, int energyNeededToReproduce, int energyLossDuringReproduction){
-        if (this.energy < energyNeededToReproduce || secondParent.getEnergy() < energyNeededToReproduce){
+    Animal produce(Animal secondParent){
+        int side = random.nextInt(2); //side of gens from stronger animal 0: left 1: right
+        Animal strongerAnimal;
+        Animal weakerAnimal;
+        int indexOfCrossingGens;
+        if (this.energy < globalSettings.energyNeededToReproduce() || secondParent.getEnergy() < globalSettings.energyNeededToReproduce()){
             return null;
         }
         else{
             int sumParentEnergy = this.getEnergy() + secondParent.getEnergy();
-            int side = random.nextInt(2);
-            int indexOfCrossingGens;
-            if (secondParent.getEnergy() >= this.getEnergy()){ //second parent is stronger than this
+            if (secondParent.getEnergy() >= this.getEnergy()){
+                strongerAnimal = secondParent; //second parent is stronger than this
+                weakerAnimal = this;
                 if (side == 0){ //leftside of stronger animal
                     indexOfCrossingGens = (int) genList.size() * secondParent.getEnergy() / sumParentEnergy;
                 }
@@ -56,7 +62,9 @@ public class Animal {
                     indexOfCrossingGens = (int) genList.size() * (1 - secondParent.getEnergy() / sumParentEnergy);
                 }
             }
-            else{ //this animal is stronger than second parent
+            else{
+                strongerAnimal = this; //this animal is stronger than second parent
+                weakerAnimal = secondParent;
                 if (side == 0){ //leftside of stronger animal
                     indexOfCrossingGens = (int) genList.size() * this.getEnergy() / sumParentEnergy;
                 }
@@ -65,6 +73,18 @@ public class Animal {
                 }
             }
         }
+        this.setEnergy(this.getEnergy() - globalSettings.energyLossDuringReproduction());
+        secondParent.setEnergy(this.getEnergy() - globalSettings.energyLossDuringReproduction());
+        List<Integer> gensOfChild = new ArrayList<>();
+        if (side == 0){
+            gensOfChild.addAll(strongerAnimal.genList.subList(0, indexOfCrossingGens + 1));
+            gensOfChild.addAll(weakerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
+        }
+        else{
+            gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens + 1));
+            gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
+        }
+        return new Animal(gensOfChild, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
     }
 
     public int getEnergy(){
@@ -86,4 +106,7 @@ public class Animal {
         descendantList.add(descendant);
     }
 
+    public void setEnergy(int energy) {
+        this.energy = energy;
+    }
 }
