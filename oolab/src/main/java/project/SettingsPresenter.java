@@ -62,7 +62,21 @@ public class SettingsPresenter {
     }
 
     public void startTheSim(){
-
+        GlobalSettings globalSettings = new GlobalSettings(
+                Integer.parseInt(mapHeight.getText()),
+                Integer.parseInt(mapWidth.getText()),
+                mapVariant.getValue(),
+                Integer.parseInt(initNumOfPlants.getText()),
+                Integer.parseInt(initNumOfAnimals.getText()),
+                Integer.parseInt(initEnergy.getText()),
+                Integer.parseInt(energyGainOnEat.getText()),
+                Integer.parseInt(energyNeededToReproduce.getText()),
+                Integer.parseInt(energyLossDuringReproduction.getText()),
+                Integer.parseInt(minMutations.getText()),
+                Integer.parseInt(maxMutations.getText()),
+                mutationVariant.getValue(),
+                Integer.parseInt(genomLength.getText())
+        );
     }
 }
 
