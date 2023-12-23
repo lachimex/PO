@@ -3,22 +3,33 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="root" minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.SettingsPresenter">
+<BorderPane fx:id="root"
+            minHeight="550.0"
+            minWidth="850.0"
+            xmlns="http://javafx.com/javafx/17.0.2-ea"
+            xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="project.SettingsPresenter"
+            stylesheets="Settings.css">
+
+    <top>
+        <Label fx:id="errorInfo" BorderPane.alignment="CENTER"></Label>
+    </top>
     <center>
         <VBox alignment="CENTER">
-            <TextField fx:id="mapHeight" alignment="CENTER" promptText="Map Height" style="-fx-max-width: 250;" />
-            <TextField fx:id="mapWidth" alignment="CENTER" promptText="Map Width" style="-fx-max-width: 250;" />
-         <ChoiceBox fx:id="mapVariant" style="-fx-max-width: 250;" />
-            <TextField fx:id="initNumOfPlants" alignment="CENTER" promptText="Initial number of plants" style="-fx-max-width: 250;" />
-            <TextField fx:id="initNumOfAnimals" alignment="CENTER" promptText="Initial number of animals" style="-fx-max-width: 250;" />
-            <TextField fx:id="initEnergy" alignment="CENTER" promptText="Initial number of energy for the animal" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyGainOnEat" alignment="CENTER" promptText="Energy gain after eating plant" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyNeededToReproduce" alignment="CENTER" promptText="Energy needed to reproduce" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyLossDuringReproduction" alignment="CENTER" promptText="Energy loss after reproduction" style="-fx-max-width: 250;" />
-            <TextField fx:id="minMutations" alignment="CENTER" promptText="Minimum number of Mutations" style="-fx-max-width: 250;" />
-            <TextField fx:id="maxMutations" alignment="CENTER" promptText="Maximum number of Mutations" style="-fx-max-width: 250;" />
-         <ChoiceBox fx:id="mutationVariant" style="-fx-max-width: 250;" />
-            <TextField fx:id="genomLength" alignment="CENTER" promptText="Length of genom" style="-fx-max-width: 250;" />
+            <TextField fx:id="mapHeight" styleClass="text-field" alignment="CENTER" promptText="Map Height"/>
+            <TextField fx:id="mapWidth" styleClass="text-field" alignment="CENTER" promptText="Map Width" />
+            <ChoiceBox fx:id="mapVariant" style="-fx-max-width: 250;" />
+            <TextField fx:id="initNumOfPlants" styleClass="text-field" alignment="CENTER" promptText="Initial number of plants" style="-fx-max-width: 250;" />
+            <TextField fx:id="initNumOfAnimals" styleClass="text-field" alignment="CENTER" promptText="Initial number of animals" style="-fx-max-width: 250;" />
+            <TextField fx:id="initEnergy" styleClass="text-field" alignment="CENTER" promptText="Initial number of energy for the animal" style="-fx-max-width: 250;" />
+            <TextField fx:id="energyGainOnEat" styleClass="text-field" alignment="CENTER" promptText="Energy gain after eating plant" style="-fx-max-width: 250;" />
+            <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" promptText="Energy needed to reproduce" style="-fx-max-width: 250;" />
+            <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" promptText="Energy loss after reproduction" style="-fx-max-width: 250;" />
+            <TextField fx:id="minMutations" styleClass="text-field" alignment="CENTER" promptText="Minimum number of Mutations" style="-fx-max-width: 250;" />
+            <TextField fx:id="maxMutations" styleClass="text-field" alignment="CENTER" promptText="Maximum number of Mutations" style="-fx-max-width: 250;" />
+            <ChoiceBox fx:id="mutationVariant" style="-fx-max-width: 250;" />
+            <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" promptText="Length of genome" style="-fx-max-width: 250;" />
+
         </VBox>
     </center>
 

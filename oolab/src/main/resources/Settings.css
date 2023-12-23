@@ -1,0 +1,4 @@
+.text-field{
+    -fx-max-width: 250;
+    -fx-border-color: grey;
+}
