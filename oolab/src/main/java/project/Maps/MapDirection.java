@@ -1,4 +1,4 @@
-package project;
+package project.Maps;
 
 import agh.ics.oop.model.Vector2d;
 

@@ -1,15 +1,20 @@
-package project;
+package project.MapElements;
+
+import project.GlobalSettings;
+import project.Maps.MapDirection;
+import project.Maps.Vector2d;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class Animal {
+public class Animal implements MapElement {
     GlobalSettings globalSettings;
     private List<Integer> genList;
     private List<Animal> descendantList = new ArrayList<>();
     private Random random = new Random();
     private MapDirection direction = MapDirection.NORTH;
+    private Vector2d position;
     private int activeGen;
     private int energy;
     int childCounter;
@@ -86,7 +91,9 @@ public class Animal {
             gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens + 1));
             gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
         }
-        return new Animal(gensOfChild, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
+        Animal child = new Animal(gensOfChild, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
+        child.mutate(globalSettings);
+        return child;
     }
 
     public int getEnergy(){
@@ -110,5 +117,19 @@ public class Animal {
 
     public void setEnergy(int energy) {
         this.energy = energy;
+    }
+
+    private void mutate(GlobalSettings globalSettings){
+        int numberOfMutations = random.nextInt(globalSettings.minimalNumberOfMutations(), globalSettings.maximumNumberOfMutations());
+        for (int i = 0; i < numberOfMutations; i++){
+            int indexOfMutation = random.nextInt(globalSettings.genomLength());
+            int toWhatGen = random.nextInt(8);
+            this.genList.set(indexOfMutation, toWhatGen);
+        }
+    }
+
+    @Override
+    public Vector2d getPosition() {
+        return position;
     }
 }

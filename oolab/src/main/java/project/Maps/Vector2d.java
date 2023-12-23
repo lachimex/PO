@@ -1,4 +1,4 @@
-package project;
+package project.Maps;
 
 import java.util.Objects;
 

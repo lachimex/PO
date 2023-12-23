@@ -1,5 +1,7 @@
 package project;
 
+import project.Maps.MapVariant;
+
 public record GlobalSettings(
         int mapHeight,
         int mapWidth,
