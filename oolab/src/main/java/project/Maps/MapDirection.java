@@ -1,6 +1,5 @@
 package project.Maps;
 
-import agh.ics.oop.model.Vector2d;
 
 public enum MapDirection {
     NORTH,
