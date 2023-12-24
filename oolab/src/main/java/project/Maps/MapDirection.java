@@ -55,7 +55,7 @@ public enum MapDirection {
         }
     }
 
-    Vector2d toUnitVector(){
+    public project.Maps.Vector2d toUnitVector(){
         switch (this){
             case NORTH -> {return new Vector2d(0, 1);}
             case NORTH_EAST -> {return new Vector2d(1, 1);}
@@ -69,7 +69,7 @@ public enum MapDirection {
         }
     }
 
-    public MapDirection intToMapDirection(int n){
+    public static MapDirection intToMapDirection(int n){
         switch (n){
             case 0 -> {
                 return NORTH;

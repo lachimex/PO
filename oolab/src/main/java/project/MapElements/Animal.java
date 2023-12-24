@@ -13,13 +13,13 @@ public class Animal implements MapElement {
     private List<Integer> genList;
     private List<Animal> descendantList = new ArrayList<>();
     private Random random = new Random();
-    private MapDirection direction = MapDirection.NORTH;
+    private MapDirection direction = MapDirection.intToMapDirection(random.nextInt(8));
     private Vector2d position;
     private int activeGen;
     private int energy;
     int childCounter;
     private int plantEatenCounter;
-    private int age;
+    public int age;
     boolean alive;
     private int dayOfDeath;
     public Animal(List<Integer> genList, int energy, GlobalSettings globalSettings) {
@@ -45,6 +45,7 @@ public class Animal implements MapElement {
 
     void eat(){
         energy += globalSettings.energyGainOnEat();
+        plantEatenCounter++;
     }
 
     Animal produce(Animal secondParent){
@@ -96,6 +97,13 @@ public class Animal implements MapElement {
         return child;
     }
 
+    public void move(){
+        direction = MapDirection.intToMapDirection(
+                genList.get(activeGen % genList.size()));
+        position = position.add(direction.toUnitVector());
+        activeGen++;
+    }
+
     public int getEnergy(){
         return this.energy;
     }
@@ -131,5 +139,17 @@ public class Animal implements MapElement {
     @Override
     public Vector2d getPosition() {
         return position;
+    }
+
+    public void setDayOfDeath(int dayOfDeath) {
+        this.dayOfDeath = dayOfDeath;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public int getChildCounter() {
+        return childCounter;
     }
 }
