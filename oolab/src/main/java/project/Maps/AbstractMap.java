@@ -11,6 +11,7 @@ public abstract class AbstractMap {
     protected final GlobalSettings globalSettings;
     protected int currentDay;
 
+
     Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     Map<Vector2d, Plant> plantMap = new HashMap<>();
     static Random random = new Random();

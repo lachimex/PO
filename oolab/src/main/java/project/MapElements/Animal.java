@@ -3,7 +3,6 @@ package project.MapElements;
 import project.GlobalSettings;
 import project.Maps.MapDirection;
 import project.Maps.Vector2d;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;

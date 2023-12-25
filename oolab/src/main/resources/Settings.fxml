@@ -30,7 +30,6 @@
             <TextField fx:id="maxMutations" styleClass="text-field" alignment="CENTER" promptText="Maximum number of Mutations" style="-fx-max-width: 250;" />
             <ChoiceBox fx:id="mutationVariant" style="-fx-max-width: 250;" />
             <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" promptText="Length of genome" style="-fx-max-width: 250;" />
-
         </VBox>
     </center>
 

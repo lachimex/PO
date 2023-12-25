@@ -2,7 +2,6 @@ package project;
 
 import agh.ics.oop.model.Grass;
 import agh.ics.oop.model.WorldElement;
-import agh.ics.oop.model.WorldMap;
 import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

@@ -1,5 +1,6 @@
 package project.Maps;
 
+
 import javafx.application.Platform;
 import project.GlobalSettings;
 import project.MapElements.Animal;
