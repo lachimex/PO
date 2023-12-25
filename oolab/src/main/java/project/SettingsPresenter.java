@@ -1,5 +1,6 @@
 package project;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -7,9 +8,14 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import project.MapElements.Animal;
+import project.MapElements.Plant;
+import project.Maps.GlobeMap;
 import project.Maps.MapVariant;
+import project.Maps.Vector2d;
 
 import java.io.IOException;
+import java.util.List;
 
 public class SettingsPresenter {
 
@@ -73,7 +79,7 @@ public class SettingsPresenter {
         mutationVariant.setItems(mutationVariants);
     }
 
-    public void startTheSim() throws IOException {
+    public void startTheSim() throws IOException, InterruptedException {
         GlobalSettings globalSettings;
         if (checkExistenceOfAllValues()) {
             globalSettings = new GlobalSettings(
@@ -96,7 +102,10 @@ public class SettingsPresenter {
                 errorInfo.setText("wszystko gra, startujemy z symulacja");
                 darwinWindow = new DarwinWindow(globalSettings);
                 darwinWindow.start(new Stage());
-                darwinWindow.getPresenter().drawMap();
+                GlobeMap globeMap = new GlobeMap(globalSettings);
+                globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+                darwinWindow.getPresenter().setMap(globeMap);
+                darwinWindow.getPresenter().startTheSim();
             }
         }
     }
@@ -232,4 +241,3 @@ public class SettingsPresenter {
     }
 
 }
-

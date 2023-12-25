@@ -1,10 +1,13 @@
 package project.Maps;
 
 import java.util.Objects;
+import java.util.Random;
 
 public class Vector2d {
     private final int x;
     private final int y;
+
+    private static Random random = new Random();
 
     public Vector2d(int x, int y){
         this.x = x;
@@ -80,5 +83,9 @@ public class Vector2d {
 
     public int hashCode(){
         return Objects.hash(this.x, this.y);
+    }
+
+    public static Vector2d generateRandomVector(int boundX, int boundY){
+        return new Vector2d(random.nextInt(boundX), random.nextInt(boundY));
     }
 }

@@ -13,7 +13,7 @@ public abstract class AbstractMap {
 
     Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     Map<Vector2d, Plant> plantMap = new HashMap<>();
-    Random random = new Random();
+    static Random random = new Random();
 
     public AbstractMap(GlobalSettings globalSettings) {
         this.globalSettings = globalSettings;
@@ -32,8 +32,22 @@ public abstract class AbstractMap {
         animalsMap.put(position, newAnimalList);
     }
 
-    private void addPlant(Vector2d position, Plant plant){
+    public void addPlant(Vector2d position, Plant plant){
         plantMap.put(position, plant);
+    }
+
+    public void prepareMap(int numberOfAnimals, int numberOfPlants){
+        for (int i = 0; i < numberOfAnimals; i++){
+            Vector2d randomVector = Vector2d.generateRandomVector(globalSettings.mapWidth(), globalSettings.mapHeight());
+            addAnimal(randomVector,
+                    new Animal(Animal.generateRandomGenList(globalSettings.genomLength()),
+                            randomVector,
+                            globalSettings.initialEnergy(),
+                            globalSettings));
+        }
+        for (int i = 0; i < numberOfPlants; i++){
+            growPlant();
+        }
     }
 
     int getNumberOfEmptyFields(){
@@ -101,7 +115,7 @@ public abstract class AbstractMap {
             return animal1;
         }
     }
-    protected void growPlants(){
+    protected void growPlant(){
         int widthOfGreenArea;
         int startingRow;
         if (globalSettings.mapHeight() % 2 == 0){
@@ -115,18 +129,26 @@ public abstract class AbstractMap {
             }
             startingRow = globalSettings.mapWidth() / 2 + 1;
         }
-        for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
-            int x = random.nextInt(globalSettings.mapWidth());
-            if (random.nextInt(5) == 4){
-                int y = random.nextInt(globalSettings.mapHeight());
-                while (y >= startingRow && y <= startingRow + widthOfGreenArea){
-                    y = random.nextInt(globalSettings.mapHeight());
-                }
-            }
-            else{
-                int y = random.nextInt(startingRow, startingRow + widthOfGreenArea);
-                plantMap.put(new Vector2d(x, y), new Plant());
+        int x = random.nextInt(globalSettings.mapWidth());
+        int y;
+        int n = random.nextInt(5);
+        if (n == 4){
+            y = random.nextInt(globalSettings.mapHeight());
+            while (y >= startingRow && y <= startingRow + widthOfGreenArea){
+                y = random.nextInt(globalSettings.mapHeight());
             }
         }
+        else{
+            y = random.nextInt(startingRow, startingRow + widthOfGreenArea);
+        }
+        plantMap.put(new Vector2d(x, y), new Plant());
+    }
+
+    public Map<Vector2d, List<Animal>> getAnimalsMap() {
+        return animalsMap;
+    }
+
+    public Map<Vector2d, Plant> getPlantMap() {
+        return plantMap;
     }
 }

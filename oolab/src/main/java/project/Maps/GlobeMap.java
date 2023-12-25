@@ -1,8 +1,11 @@
 package project.Maps;
 
+import javafx.application.Platform;
 import project.GlobalSettings;
 import project.MapElements.Animal;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class GlobeMap extends AbstractMap implements MapInterface{
@@ -22,10 +25,10 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void moveEachAnimal() {
-        animalsMap.forEach((position, animals) ->
-        {
-            List<Animal> removed = animalsMap.remove(position);
-            for (Animal animal : removed){
+        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        super.animalsMap.clear();
+        values.stream().forEach(animalList -> {
+            for (Animal animal : animalList){
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
                 if (animal.getPosition().getX() >= globalSettings.mapWidth()){
@@ -50,11 +53,15 @@ public class GlobeMap extends AbstractMap implements MapInterface{
     @Override
     public void plantConsumption() {
         animalsMap.forEach((position, animals) -> {
-            if (plantMap.containsKey(position)){
-                Animal animal = super.figureOutEatingConflict(position);
-                animal.eat();
-                plantMap.remove(position);
+            Animal wonAnimal;
+            if (plantMap.containsKey(position) && animals.size() > 1){
+                wonAnimal = super.figureOutEatingConflict(position);
             }
+            else{
+                wonAnimal = animals.get(0);
+            }
+            wonAnimal.eat();
+            plantMap.remove(position);
         });
     }
 
@@ -70,6 +77,8 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void growPlants() {
-        super.growPlants();
+        for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
+            super.growPlant();
+        }
     }
 }

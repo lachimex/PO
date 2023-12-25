@@ -12,7 +12,7 @@ public class Animal implements MapElement {
     GlobalSettings globalSettings;
     private List<Integer> genList;
     private List<Animal> descendantList = new ArrayList<>();
-    private Random random = new Random();
+    private static Random random = new Random();
     private MapDirection direction = MapDirection.intToMapDirection(random.nextInt(8));
     private Vector2d position;
     private int activeGen;
@@ -22,10 +22,11 @@ public class Animal implements MapElement {
     public int age;
     boolean alive;
     private int dayOfDeath;
-    public Animal(List<Integer> genList, int energy, GlobalSettings globalSettings) {
+    public Animal(List<Integer> genList, Vector2d position, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
         this.globalSettings = globalSettings;
         this.energy = energy;
+        this.position = position;
         this.childCounter = 0;
         this.plantEatenCounter = 0;
         this.age = 0;
@@ -92,7 +93,7 @@ public class Animal implements MapElement {
             gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens + 1));
             gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
         }
-        Animal child = new Animal(gensOfChild, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
+        Animal child = new Animal(gensOfChild, this.position, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
         child.mutate(globalSettings);
         return child;
     }
@@ -134,6 +135,14 @@ public class Animal implements MapElement {
             int toWhatGen = random.nextInt(8);
             this.genList.set(indexOfMutation, toWhatGen);
         }
+    }
+
+    public static List<Integer> generateRandomGenList(int numberOfGens){
+        List<Integer> out = new ArrayList<>();
+        for (int i = 0; i < numberOfGens; i++){
+            out.add(random.nextInt(8));
+        }
+        return out;
     }
 
     @Override
