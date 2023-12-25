@@ -12,12 +12,19 @@ import java.io.IOException;
 
 public class DarwinWindow extends Application {
 
+    GlobalSettings globalSettings;
+
+    public DarwinWindow(GlobalSettings globalSettings) {
+        this.globalSettings = globalSettings;
+    }
+
     private DarwinPresenter presenter = new DarwinPresenter();
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(getClass().getClassLoader().getResource("simulation.fxml"));
+        loader.setLocation(getClass().getClassLoader().getResource("DarwinSim.fxml"));
         BorderPane viewRoot = loader.load();
         presenter = loader.getController();
+        presenter.setGlobalSettings(globalSettings);
         configureStage(primaryStage, viewRoot);
         primaryStage.show();
     }
@@ -25,7 +32,7 @@ public class DarwinWindow extends Application {
     private void configureStage(Stage primaryStage, BorderPane viewRoot) {
         var scene = new Scene(viewRoot);
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Simulation app");
+        primaryStage.setTitle("Darwin simulation app");
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }

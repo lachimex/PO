@@ -6,9 +6,20 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane xmlns="http://javafx.com/javafx"
+<BorderPane xmlns="http://javafx.com/javafx"
             xmlns:fx="http://javafx.com/fxml"
+            minHeight="550.0" minWidth="850.0"
             fx:controller="project.DarwinPresenter"
-            minHeight="400.0" minWidth="600.0">
+            fx:id="root">
 
-</AnchorPane>
+    <center>
+        <VBox alignment="CENTER">
+            <Label fx:id="dayLabel" textAlignment="CENTER"/>
+            <HBox alignment="CENTER">
+                <GridPane fx:id="mapGrid" gridLinesVisible="true"/>
+            </HBox>
+        </VBox>
+    </center>
+
+
+</BorderPane>

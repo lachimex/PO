@@ -6,7 +6,10 @@ import javafx.fxml.FXML;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.stage.Stage;
 import project.Maps.MapVariant;
+
+import java.io.IOException;
 
 public class SettingsPresenter {
 
@@ -27,6 +30,9 @@ public class SettingsPresenter {
 
     @FXML
     private TextField initEnergy;
+
+    @FXML
+    private TextField numOfPlantsEachDay;
 
     @FXML
     private TextField energyGainOnEat;
@@ -51,6 +57,8 @@ public class SettingsPresenter {
     @FXML
     private Label errorInfo;
 
+    private DarwinWindow darwinWindow;
+
     @FXML
     private void initialize(){
         ObservableList<MapVariant> mapVariants = FXCollections.observableArrayList(
@@ -65,28 +73,32 @@ public class SettingsPresenter {
         mutationVariant.setItems(mutationVariants);
     }
 
-    public void startTheSim(){
-        if (checkExistenceOfAllValues()){
-            GlobalSettings globalSettings = new GlobalSettings(
-                    Integer.parseInt(mapHeight.getText()),
-                    Integer.parseInt(mapWidth.getText()),
+    public void startTheSim() throws IOException {
+        GlobalSettings globalSettings;
+        if (checkExistenceOfAllValues()) {
+            globalSettings = new GlobalSettings(
+                    Integer.parseInt(mapHeight.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(mapWidth.getText().replaceAll("\\s", "")),
                     mapVariant.getValue(),
-                    Integer.parseInt(initNumOfPlants.getText()),
-                    Integer.parseInt(initNumOfAnimals.getText()),
-                    Integer.parseInt(initEnergy.getText()),
-                    Integer.parseInt(energyGainOnEat.getText()),
-                    Integer.parseInt(energyNeededToReproduce.getText()),
-                    Integer.parseInt(energyLossDuringReproduction.getText()),
-                    Integer.parseInt(minMutations.getText()),
-                    Integer.parseInt(maxMutations.getText()),
+                    Integer.parseInt(initNumOfPlants.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(initNumOfAnimals.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(initEnergy.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(numOfPlantsEachDay.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(energyGainOnEat.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(energyNeededToReproduce.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(energyLossDuringReproduction.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(minMutations.getText().replaceAll("\\s", "")),
+                    Integer.parseInt(maxMutations.getText().replaceAll("\\s", "")),
                     mutationVariant.getValue(),
-                    Integer.parseInt(genomLength.getText())
+                    Integer.parseInt(genomLength.getText().replaceAll("\\s", ""))
             );
-            if (checkSettings(globalSettings)){
+        if (checkSettings(globalSettings)){
                 errorInfo.setText("wszystko gra, startujemy z symulacja");
+                darwinWindow = new DarwinWindow(globalSettings);
+                darwinWindow.start(new Stage());
+                darwinWindow.getPresenter().drawMap();
             }
         }
-
     }
     boolean checkSettings(GlobalSettings settings) {
         if (settings.mapHeight() <= 0) {
@@ -119,6 +131,15 @@ public class SettingsPresenter {
             return false;
         } else {
             initEnergy.setStyle("-fx-border-color: grey; -fx-max-width: 250");
+        }
+
+        if (settings.numberOfPlantsEachDay() <= 0){
+            numOfPlantsEachDay.setStyle("-fx-border-color: red; -fx-max-width: 250");
+            errorInfo.setText("Ilosc roslin rosnacych kazdego dnia musi byc wieksza od 0");
+            return false;
+        }
+        else{
+            numOfPlantsEachDay.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
         if (settings.energyGainOnEat() < 0) {
@@ -195,6 +216,7 @@ public class SettingsPresenter {
                 || initNumOfPlants.getText().isEmpty()
                 || initNumOfAnimals.getText().isEmpty()
                 || initEnergy.getText().isEmpty()
+                || numOfPlantsEachDay.getText().isEmpty()
                 || energyGainOnEat.getText().isEmpty()
                 || energyNeededToReproduce.getText().isEmpty()
                 || energyLossDuringReproduction.getText().isEmpty()
