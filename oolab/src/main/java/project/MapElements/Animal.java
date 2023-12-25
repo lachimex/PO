@@ -43,12 +43,12 @@ public class Animal implements MapElement {
         }
     }
 
-    void eat(){
+    public void eat(){
         energy += globalSettings.energyGainOnEat();
         plantEatenCounter++;
     }
 
-    Animal produce(Animal secondParent){
+    public Animal produce(Animal secondParent){
         int side = random.nextInt(2); //side of gens from stronger animal 0: left 1: right
         Animal strongerAnimal;
         Animal weakerAnimal;
@@ -151,5 +151,17 @@ public class Animal implements MapElement {
 
     public int getChildCounter() {
         return childCounter;
+    }
+
+    public void setPosition(Vector2d position) {
+        this.position = position;
+    }
+
+    public void setDirection(MapDirection direction) {
+        this.direction = direction;
+    }
+
+    public MapDirection getDirection() {
+        return direction;
     }
 }

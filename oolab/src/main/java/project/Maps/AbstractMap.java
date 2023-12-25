@@ -13,6 +13,7 @@ public abstract class AbstractMap {
 
     Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     Map<Vector2d, Plant> plantMap = new HashMap<>();
+    Random random = new Random();
 
     public AbstractMap(GlobalSettings globalSettings) {
         this.globalSettings = globalSettings;
@@ -98,6 +99,34 @@ public abstract class AbstractMap {
         }
         else{
             return animal1;
+        }
+    }
+    protected void growPlants(){
+        int widthOfGreenArea;
+        int startingRow;
+        if (globalSettings.mapHeight() % 2 == 0){
+            widthOfGreenArea = globalSettings.mapWidth() / 5 + 1;
+            startingRow = globalSettings.mapWidth() / 2 - 1;
+        }
+        else{
+            widthOfGreenArea = globalSettings.mapWidth() / 5;
+            if (widthOfGreenArea == 0){
+                widthOfGreenArea = 1;
+            }
+            startingRow = globalSettings.mapWidth() / 2 + 1;
+        }
+        for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
+            int x = random.nextInt(globalSettings.mapWidth());
+            if (random.nextInt(5) == 4){
+                int y = random.nextInt(globalSettings.mapHeight());
+                while (y >= startingRow && y <= startingRow + widthOfGreenArea){
+                    y = random.nextInt(globalSettings.mapHeight());
+                }
+            }
+            else{
+                int y = random.nextInt(startingRow, startingRow + widthOfGreenArea);
+                plantMap.put(new Vector2d(x, y), new Plant());
+            }
         }
     }
 }

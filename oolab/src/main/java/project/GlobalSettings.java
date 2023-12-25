@@ -9,6 +9,7 @@ public record GlobalSettings(
         int initialNumberOfPlants,
         int initialNumberOfAnimals,
         int initialEnergy,
+        int numberOfPlantsEachDay,
         int energyGainOnEat,
         int energyNeededToReproduce,
         int energyLossDuringReproduction,

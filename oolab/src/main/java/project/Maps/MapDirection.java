@@ -26,6 +26,21 @@ public enum MapDirection {
         }
     }
 
+    public MapDirection opposite() {
+        return switch (this) {
+            case NORTH -> SOUTH;
+            case NORTH_EAST -> SOUTH_WEST;
+            case EAST -> WEST;
+            case SOUTH_EAST -> NORTH_WEST;
+            case SOUTH -> NORTH;
+            case SOUTH_WEST -> NORTH_EAST;
+            case WEST -> EAST;
+            case NORTH_WEST -> SOUTH_EAST;
+            default -> throw new IllegalArgumentException("Direction not exist in real world");
+        };
+    }
+
+
     public MapDirection next(){
         switch (this){
             case NORTH -> {return NORTH_EAST;}
