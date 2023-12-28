@@ -48,11 +48,15 @@ public abstract class AbstractWorldMap{
 
     protected void move(Animal animal, MoveDirection direction, MoveValidator moveValidator){
         Vector2d positionPrev = animal.getPosition();
+        MapDirection directionPrev = animal.getAnimalOrientation();
         animalMap.remove(animal.getPosition());
         animal.move(direction, moveValidator);
         animalMap.put(animal.getPosition(), animal);
         if (!positionPrev.equals(animal.getPosition())){
-            mapChanged(animal + positionPrev.toString() + " moved");
+            mapChanged(animal + positionPrev.toString() + " moved to the position " + animal.getPosition().toString());
+        }
+        if (!directionPrev.equals(animal.getAnimalOrientation())){
+            mapChanged("Animal " + animal.getPosition() + " changed orientation from " + directionPrev + " to " + animal.getAnimalOrientation());
         }
     }
 
