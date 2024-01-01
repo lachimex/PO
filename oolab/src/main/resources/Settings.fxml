@@ -16,20 +16,20 @@
     </top>
     <center>
         <VBox alignment="CENTER">
-            <TextField fx:id="mapHeight" styleClass="text-field" alignment="CENTER" promptText="Map Height"/>
-            <TextField fx:id="mapWidth" styleClass="text-field" alignment="CENTER" promptText="Map Width" />
+            <TextField fx:id="mapHeight" styleClass="text-field" alignment="CENTER" promptText="Map Height" text="10"/>
+            <TextField fx:id="mapWidth" styleClass="text-field" alignment="CENTER" promptText="Map Width" text="10"/>
             <ChoiceBox fx:id="mapVariant" style="-fx-max-width: 250;" />
-            <TextField fx:id="initNumOfPlants" styleClass="text-field" alignment="CENTER" promptText="Initial number of plants" style="-fx-max-width: 250;" />
-            <TextField fx:id="initNumOfAnimals" styleClass="text-field" alignment="CENTER" promptText="Initial number of animals" style="-fx-max-width: 250;" />
-            <TextField fx:id="initEnergy" styleClass="text-field" alignment="CENTER" promptText="Initial number of energy for the animal" style="-fx-max-width: 250;" />
-            <TextField fx:id="numOfPlantsEachDay" styleClass="text-field" alignment="CENTER" promptText="Number of plants grown each day" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyGainOnEat" styleClass="text-field" alignment="CENTER" promptText="Energy gain after eating plant" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" promptText="Energy needed to reproduce" style="-fx-max-width: 250;" />
-            <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" promptText="Energy loss after reproduction" style="-fx-max-width: 250;" />
-            <TextField fx:id="minMutations" styleClass="text-field" alignment="CENTER" promptText="Minimum number of Mutations" style="-fx-max-width: 250;" />
-            <TextField fx:id="maxMutations" styleClass="text-field" alignment="CENTER" promptText="Maximum number of Mutations" style="-fx-max-width: 250;" />
+            <TextField fx:id="initNumOfPlants" styleClass="text-field" alignment="CENTER" promptText="Initial number of plants" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="initNumOfAnimals" styleClass="text-field" alignment="CENTER" promptText="Initial number of animals" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="initEnergy" styleClass="text-field" alignment="CENTER" promptText="Initial number of energy for the animal" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="numOfPlantsEachDay" styleClass="text-field" alignment="CENTER" promptText="Number of plants grown each day" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="energyGainOnEat" styleClass="text-field" alignment="CENTER" promptText="Energy gain after eating plant" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" promptText="Energy needed to reproduce" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" promptText="Energy loss after reproduction" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="minMutations" styleClass="text-field" alignment="CENTER" promptText="Minimum number of Mutations" style="-fx-max-width: 250;" text="1"/>
+            <TextField fx:id="maxMutations" styleClass="text-field" alignment="CENTER" promptText="Maximum number of Mutations" style="-fx-max-width: 250;" text="1"/>
             <ChoiceBox fx:id="mutationVariant" style="-fx-max-width: 250;" />
-            <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" promptText="Length of genome" style="-fx-max-width: 250;" />
+            <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" promptText="Length of genome" style="-fx-max-width: 250;" text="1"/>
         </VBox>
     </center>
 

@@ -71,11 +71,13 @@ public class SettingsPresenter {
                 MapVariant.UNDERGROUND_TUNNELS
         );
         mapVariant.setItems(mapVariants);
+        mapVariant.setValue(MapVariant.GLOBE);
         ObservableList<MutationVariant> mutationVariants = FXCollections.observableArrayList(
                 MutationVariant.FULL_RANDOMNESS,
                 MutationVariant.LITTLE_BIT_OF_CRAZINESS
         );
         mutationVariant.setItems(mutationVariants);
+        mutationVariant.setValue(MutationVariant.FULL_RANDOMNESS);
     }
 
     public void startTheSim() throws IOException, InterruptedException {
