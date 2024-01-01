@@ -102,6 +102,7 @@ public class Animal implements MapElement {
                 genList.get(activeGen % genList.size()));
         position = position.add(direction.toUnitVector());
         activeGen++;
+        energy--;
     }
 
     public int getEnergy(){

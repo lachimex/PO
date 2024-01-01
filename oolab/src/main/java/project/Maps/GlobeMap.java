@@ -16,19 +16,21 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void deleteDeadAnimals() {
-        animalsMap.forEach((vector2d, animals) -> animals.forEach(animal -> {
-            if(animal.getEnergy() <= 0){
-                animal.setDayOfDeath(currentDay);
-                animals.remove(animal);
-            }
-        }));
+        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        super.animalsMap.clear();
+        values.forEach(animalList -> {
+            for (Animal animal : animalList){
+                if (animal.getEnergy() > 0){
+                    super.addAnimal(animal.getPosition(), animal);
+                }
+        }});
     }
 
     @Override
     public void moveEachAnimal() {
         Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
         super.animalsMap.clear();
-        values.stream().forEach(animalList -> {
+        values.forEach(animalList -> {
             for (Animal animal : animalList){
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
@@ -54,14 +56,16 @@ public class GlobeMap extends AbstractMap implements MapInterface{
     @Override
     public void plantConsumption() {
         animalsMap.forEach((position, animals) -> {
-            Animal wonAnimal;
+            Animal wonAnimal = null;
             if (plantMap.containsKey(position) && animals.size() > 1){
                 wonAnimal = super.figureOutEatingConflict(position);
             }
-            else{
+            else if (plantMap.containsKey(position)){
                 wonAnimal = animals.get(0);
             }
-            wonAnimal.eat();
+            if (wonAnimal != null){
+                wonAnimal.eat();
+            }
             plantMap.remove(position);
         });
     }
