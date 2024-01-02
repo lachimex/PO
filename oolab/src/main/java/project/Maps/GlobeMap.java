@@ -57,25 +57,29 @@ public class GlobeMap extends AbstractMap implements MapInterface{
     public void plantConsumption() {
         animalsMap.forEach((position, animals) -> {
             Animal wonAnimal = null;
-            if (plantMap.containsKey(position) && animals.size() > 1){
-                wonAnimal = super.figureOutEatingConflict(position);
-            }
-            else if (plantMap.containsKey(position)){
-                wonAnimal = animals.get(0);
-            }
+            if (plantMap.containsKey(position)){
+                if (animals.size() > 1){
+                    wonAnimal = super.figureOutEatingConflict(position);
+                } else {
+                    wonAnimal = animals.get(0);
+                }
             if (wonAnimal != null){
                 wonAnimal.eat();
+                plantMap.remove(position);
             }
-            plantMap.remove(position);
-        });
+        }});
     }
 
     @Override
     public void animalReproduce() {
         animalsMap.forEach(((position, animals) -> {
-            if (animals.size() > 2){
+            if (animals.size() >= 2){
                 List<Animal> animalList = super.figureOutAnimalReproductionConflict(position);
-                animalList.get(0).produce(animalList.get(1));
+                Animal animal = animalList.get(0).produce(animalList.get(1));
+                if (animal != null){
+                    animals.add(animal);
+                    animalsMap.put(animal.getPosition(), animals);
+                }
             }
         }));
     }
@@ -85,5 +89,25 @@ public class GlobeMap extends AbstractMap implements MapInterface{
         for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
             super.growPlant();
         }
+    }
+
+    @Override
+    public int getAnimalNumber() {
+        int count = 0;
+        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        for (List animalList : values){
+            count += animalList.size();
+        }
+        return count;
+    }
+
+    @Override
+    public int getPlantNumber() {
+        return plantMap.values().size();
+    }
+
+    @Override
+    public Animal figureOutEatingConflict(Vector2d position) {
+        return super.figureOutEatingConflict(position);
     }
 }

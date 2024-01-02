@@ -76,9 +76,18 @@ public abstract class AbstractMap {
     }
 
     List<Animal> figureOutAnimalReproductionConflict(Vector2d position){
-        Animal animal1 = figureOutEatingConflict(position);
-        animalsMap.get(position).remove(animal1);
-        Animal animal2 = figureOutEatingConflict(position);
+        Animal animal1;
+        Animal animal2;
+        if (animalsMap.get(position).size() > 2){
+            animal1 = figureOutEatingConflict(position);
+            animalsMap.get(position).remove(animal1);
+            animal2 = figureOutEatingConflict(position);
+            animalsMap.get(position).add(animal1);
+        }
+        else{
+            animal1 = animalsMap.get(position).get(0);
+            animal2 = animalsMap.get(position).get(1);
+        }
         return new ArrayList<>(List.of(animal1, animal2));
     }
 
@@ -121,14 +130,14 @@ public abstract class AbstractMap {
         int startingRow;
         if (globalSettings.mapHeight() % 2 == 0){
             widthOfGreenArea = globalSettings.mapWidth() / 5 + 1;
-            startingRow = globalSettings.mapWidth() / 2 - 1;
+            startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
         }
         else{
             widthOfGreenArea = globalSettings.mapWidth() / 5;
             if (widthOfGreenArea == 0){
                 widthOfGreenArea = 1;
             }
-            startingRow = globalSettings.mapWidth() / 2 + 1;
+            startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
         }
         int x = random.nextInt(globalSettings.mapWidth());
         int y;

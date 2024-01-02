@@ -15,4 +15,8 @@ public interface MapInterface {
 
     Map<Vector2d, List<Animal>> getAnimalsMap();
     Map<Vector2d, Plant> getPlantMap();
+
+    int getAnimalNumber();
+    int getPlantNumber();
+    Animal figureOutEatingConflict(Vector2d position);
 }

@@ -85,12 +85,12 @@ public class Animal implements MapElement {
         secondParent.childCounter += 1;
         List<Integer> gensOfChild = new ArrayList<>();
         if (side == 0){
-            gensOfChild.addAll(strongerAnimal.genList.subList(0, indexOfCrossingGens + 1));
-            gensOfChild.addAll(weakerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
+            gensOfChild.addAll(strongerAnimal.genList.subList(0, indexOfCrossingGens));
+            gensOfChild.addAll(weakerAnimal.genList.subList(indexOfCrossingGens, weakerAnimal.genList.size()));
         }
         else{
-            gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens + 1));
-            gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens + 1, weakerAnimal.genList.size()));
+            gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens));
+            gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens, weakerAnimal.genList.size()));
         }
         Animal child = new Animal(gensOfChild, this.position, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
         child.mutate(globalSettings);
