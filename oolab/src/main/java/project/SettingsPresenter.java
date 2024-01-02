@@ -7,14 +7,11 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import project.MapElements.Animal;
-import project.MapElements.Plant;
 import project.Maps.GlobeMap;
 import project.Maps.MapVariant;
-import project.Maps.Vector2d;
+import project.Maps.TunnelsMap;
 
 import java.io.IOException;
-import java.util.List;
 
 public class SettingsPresenter {
 
@@ -55,7 +52,7 @@ public class SettingsPresenter {
     private TextField maxMutations;
 
     @FXML
-    private ChoiceBox<MutationVariant> mutationVariant;
+    private ChoiceBox<BehaviourVariant> mutationVariant;
 
     @FXML
     private TextField genomLength;
@@ -72,12 +69,12 @@ public class SettingsPresenter {
         );
         mapVariant.setItems(mapVariants);
         mapVariant.setValue(MapVariant.GLOBE);
-        ObservableList<MutationVariant> mutationVariants = FXCollections.observableArrayList(
-                MutationVariant.FULL_RANDOMNESS,
-                MutationVariant.LITTLE_BIT_OF_CRAZINESS
+        ObservableList<BehaviourVariant> mutationVariants = FXCollections.observableArrayList(
+                BehaviourVariant.COMPLETE_PREDESTINATION,
+                BehaviourVariant.LITTLE_BIT_OF_CRAZINESS
         );
         mutationVariant.setItems(mutationVariants);
-        mutationVariant.setValue(MutationVariant.FULL_RANDOMNESS);
+        mutationVariant.setValue(BehaviourVariant.COMPLETE_PREDESTINATION);
     }
 
     public void startTheSim() throws IOException, InterruptedException {
@@ -103,9 +100,15 @@ public class SettingsPresenter {
                 errorInfo.setText("wszystko gra, startujemy z symulacja");
                 darwinWindow = new DarwinWindow(globalSettings);
                 darwinWindow.start(new Stage());
-                GlobeMap globeMap = new GlobeMap(globalSettings);
-                globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
-                darwinWindow.getPresenter().setMap(globeMap);
+                if (globalSettings.mapVariant().equals(MapVariant.GLOBE)){
+                    GlobeMap globeMap = new GlobeMap(globalSettings);
+                    globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+                    darwinWindow.getPresenter().setMap(globeMap);
+                } else{
+                    TunnelsMap tunnelsMap = new TunnelsMap(globalSettings);
+                    tunnelsMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+                    darwinWindow.getPresenter().setMap(tunnelsMap);
+                }
                 darwinWindow.getPresenter().startTheSim();
             }
         }
@@ -133,6 +136,14 @@ public class SettingsPresenter {
             return false;
         } else {
             initNumOfPlants.setStyle("-fx-border-color: grey; -fx-max-width: 250");
+        }
+
+        if (settings.initialNumberOfAnimals() <= 0) {
+            initNumOfAnimals.setStyle("-fx-border-color: red; -fx-max-width: 250");
+            errorInfo.setText("Liczba początkowa zwierzat musi być dodatnia.");
+            return false;
+        } else {
+            initNumOfAnimals.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
         if (settings.initialEnergy() < 0) {

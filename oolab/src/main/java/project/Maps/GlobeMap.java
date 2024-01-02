@@ -16,14 +16,7 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void deleteDeadAnimals() {
-        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
-        super.animalsMap.clear();
-        values.forEach(animalList -> {
-            for (Animal animal : animalList){
-                if (animal.getEnergy() > 0){
-                    super.addAnimal(animal.getPosition(), animal);
-                }
-        }});
+        super.deleteDeadAnimals();
     }
 
     @Override
@@ -72,16 +65,7 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void animalReproduce() {
-        animalsMap.forEach(((position, animals) -> {
-            if (animals.size() >= 2){
-                List<Animal> animalList = super.figureOutAnimalReproductionConflict(position);
-                Animal animal = animalList.get(0).produce(animalList.get(1));
-                if (animal != null){
-                    animals.add(animal);
-                    animalsMap.put(animal.getPosition(), animals);
-                }
-            }
-        }));
+        super.animalReproduce();
     }
 
     @Override
@@ -93,18 +77,19 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public int getAnimalNumber() {
-        int count = 0;
-        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
-        for (List animalList : values){
-            count += animalList.size();
-        }
-        return count;
+        return super.getAnimalNumber();
     }
 
     @Override
     public int getPlantNumber() {
-        return plantMap.values().size();
+        return super.getPlantNumber();
     }
+
+    @Override
+    public int getAverageEnergy() {
+        return super.getAverageEnergy();
+    }
+
 
     @Override
     public Animal figureOutEatingConflict(Vector2d position) {

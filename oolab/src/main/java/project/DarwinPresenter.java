@@ -18,18 +18,19 @@ import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
 import project.MapElements.Animal;
 import project.MapElements.Plant;
-import project.Maps.AbstractMap;
-import project.Maps.MapInterface;
-import project.Maps.Vector2d;
+import project.Maps.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class DarwinPresenter {
     private GlobalSettings globalSettings;
     private MapInterface map;
     boolean paused = false;
     private int dayCounter = 1;
+    private Set<Vector2d> occupiedPlacesSet = new HashSet<>();
     @FXML
     private Label dayLabel;
     @FXML
@@ -38,6 +39,7 @@ public class DarwinPresenter {
     private Button pauseResumeButton;
     @FXML
     private Label pausedInfo;
+    private Timeline timeline;
 
     public void handlePauseResumeRequest(){
         if (paused){
@@ -52,7 +54,10 @@ public class DarwinPresenter {
     }
 
     private void displayInfo(){
-        pausedInfo.setText("Animals: " + map.getAnimalNumber() + "\nPlants: " + map.getPlantNumber());
+        pausedInfo.setText("Animals: " + map.getAnimalNumber()
+                + "\nPlants: " + map.getPlantNumber()
+                + "\nFree fields: " + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size())
+                + "\nAverage energy: " + map.getAverageEnergy());
     }
 
     public void setGlobalSettings(GlobalSettings globalSettings) {
@@ -102,6 +107,7 @@ public class DarwinPresenter {
         Map<Vector2d, List<Animal>> animalsMap = map.getAnimalsMap();
         Map<Vector2d, Plant> plantMap = map.getPlantMap();
         plantMap.forEach((position, plant) -> {
+            occupiedPlacesSet.add(position);
             Label plantCell = new Label();
             StackPane stackPane = new StackPane(plantCell);
             stackPane.setStyle("-fx-background-color: green");
@@ -110,6 +116,7 @@ public class DarwinPresenter {
             mapGrid.add(stackPane, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
         animalsMap.forEach((position, animals) -> {
+            occupiedPlacesSet.add(position);
             Label animalCell = new Label();
             StackPane stackPane = new StackPane(animalCell);
             Animal strongestAnimal;
@@ -127,11 +134,26 @@ public class DarwinPresenter {
             GridPane.setFillWidth(stackPane, true);
             mapGrid.add(stackPane, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
+        if (globalSettings.mapVariant().equals(MapVariant.UNDERGROUND_TUNNELS)){
+            Map<Vector2d, Vector2d> tunnelsMap = ((TunnelsMap) map).getTunnelMap();
+            tunnelsMap.forEach((entry, exit) -> {
+                Label tunnelCell1 = new Label();
+                Label tunnelCell2 = new Label();
+                StackPane stackPane1 = new StackPane(tunnelCell1);
+                StackPane stackPane2 = new StackPane(tunnelCell2);
+                stackPane1.setStyle("-fx-background-color: #de7954"); //entry
+                stackPane2.setStyle("-fx-background-color: #7e6059"); //exit
+                GridPane.setFillHeight(stackPane1, true);
+                GridPane.setFillWidth(stackPane2, true);
+                mapGrid.add(stackPane1, entry.getX() + 1, globalSettings.mapHeight() - entry.getY());
+                mapGrid.add(stackPane2, exit.getX() + 1, globalSettings.mapHeight() - exit.getY());
+            });
+        }
     }
 
     public void startTheSim(){
-        Timeline timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.1), event -> {
+        timeline = new Timeline(
+                new KeyFrame(Duration.seconds(0.5), event -> {
                     if (!paused){
                         dayLabel.setText(Integer.toString(dayCounter++));
                         drawMap();
@@ -141,9 +163,14 @@ public class DarwinPresenter {
                         map.animalReproduce();
                         map.growPlants();
                     }
+                    if (map.getAnimalNumber() == 0){
+                        timeline.stop();
+                    }
                 })
         );
         timeline.setCycleCount(Animation.INDEFINITE); // Run indefinitely
         timeline.play();
        }
-    }
+
+}
+

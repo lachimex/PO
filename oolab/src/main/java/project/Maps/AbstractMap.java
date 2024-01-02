@@ -51,20 +51,28 @@ public abstract class AbstractMap {
         }
     }
 
-    int getNumberOfEmptyFields(){
-        int out = 0;
-        for (int i = 0; i < globalSettings.mapHeight(); i++){
-            for (int j = 0; j < globalSettings.mapWidth(); j++){
-                if (plantMap.containsKey(new Vector2d(i, j))){
-                    continue;
+    public void deleteDeadAnimals() {
+        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        animalsMap.clear();
+        values.forEach(animalList -> {
+            for (Animal animal : animalList){
+                if (animal.getEnergy() > 0){
+                    addAnimal(animal.getPosition(), animal);
                 }
-                if (animalsMap.containsKey(new Vector2d(i, j))){
-                    continue;
+            }});
+    }
+
+    public void animalReproduce() {
+        animalsMap.forEach(((position, animals) -> {
+            if (animals.size() >= 2){
+                List<Animal> animalList = figureOutAnimalReproductionConflict(position);
+                Animal animal = animalList.get(0).produce(animalList.get(1));
+                if (animal != null){
+                    animals.add(animal);
+                    animalsMap.put(animal.getPosition(), animals);
                 }
-                out++;
             }
-        }
-        return out;
+        }));
     }
 
     int getAverageEnergy(){
@@ -160,5 +168,16 @@ public abstract class AbstractMap {
 
     public Map<Vector2d, Plant> getPlantMap() {
         return plantMap;
+    }
+    public int getAnimalNumber() {
+        int count = 0;
+        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        for (List animalList : values){
+            count += animalList.size();
+        }
+        return count;
+    }
+    public int getPlantNumber() {
+        return plantMap.values().size();
     }
 }

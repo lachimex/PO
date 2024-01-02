@@ -18,5 +18,6 @@ public interface MapInterface {
 
     int getAnimalNumber();
     int getPlantNumber();
+    int getAverageEnergy();
     Animal figureOutEatingConflict(Vector2d position);
 }

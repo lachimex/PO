@@ -15,7 +15,7 @@ public record GlobalSettings(
         int energyLossDuringReproduction,
         int minimalNumberOfMutations,
         int maximumNumberOfMutations,
-        MutationVariant mutationVariant, //full randomness and little bit of craziness
+        BehaviourVariant behaviourVariant, //complete predestination and little bit of craziness
         int genomLength
 
 ) { }

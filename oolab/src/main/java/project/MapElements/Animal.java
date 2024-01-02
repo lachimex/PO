@@ -1,5 +1,6 @@
 package project.MapElements;
 
+import project.BehaviourVariant;
 import project.GlobalSettings;
 import project.Maps.MapDirection;
 import project.Maps.Vector2d;
@@ -101,7 +102,17 @@ public class Animal implements MapElement {
         direction = MapDirection.intToMapDirection(
                 genList.get(activeGen % genList.size()));
         position = position.add(direction.toUnitVector());
-        activeGen++;
+        if (globalSettings.behaviourVariant().equals(BehaviourVariant.LITTLE_BIT_OF_CRAZINESS)){
+            if (random.nextInt(5) == 4){
+                activeGen += random.nextInt(genList.size());
+            }
+            else{
+                activeGen++;
+            }
+        }
+        else{
+            activeGen++;
+        }
         energy--;
     }
 
