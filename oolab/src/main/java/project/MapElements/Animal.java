@@ -1,6 +1,7 @@
 package project.MapElements;
 
 import project.BehaviourVariant;
+import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
 import project.Maps.MapDirection;
 import project.Maps.Vector2d;
@@ -13,7 +14,7 @@ public class Animal implements MapElement {
     private List<Integer> genList;
     private List<Animal> descendantList = new ArrayList<>();
     private static Random random = new Random();
-    private MapDirection direction = MapDirection.intToMapDirection(random.nextInt(8));
+    private MapDirection direction;
     private Vector2d position;
     private int activeGen;
     private int energy;
@@ -21,7 +22,9 @@ public class Animal implements MapElement {
     private int plantEatenCounter;
     public int age;
     boolean alive;
-    private int dayOfDeath;
+    private Integer dayOfDeath = null;
+    private Integer lifeSpan = null;
+    private int bornDay;
     public Animal(List<Integer> genList, Vector2d position, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
         this.globalSettings = globalSettings;
@@ -41,6 +44,7 @@ public class Animal implements MapElement {
         }
         else{
             this.activeGen = genList.get(random.nextInt(genList.size()));
+            this.direction = MapDirection.intToMapDirection(activeGen);
         }
     }
 
@@ -165,6 +169,14 @@ public class Animal implements MapElement {
         this.dayOfDeath = dayOfDeath;
     }
 
+    public int getBornDay() {
+        return bornDay;
+    }
+
+    public void setBornDay(int bornDay) {
+        this.bornDay = bornDay;
+    }
+
     public int getAge() {
         return age;
     }
@@ -180,8 +192,26 @@ public class Animal implements MapElement {
     public void setDirection(MapDirection direction) {
         this.direction = direction;
     }
+    public int getDayOfDeath() throws AnimalNotDeadYetException {
+        if (dayOfDeath == null){
+            throw new AnimalNotDeadYetException(this);
+        }
+        return dayOfDeath;
+    }
+
+    public int getLifeSpan() throws AnimalNotDeadYetException {
+        if (lifeSpan == null){
+            throw new AnimalNotDeadYetException(this);
+        }
+        return lifeSpan;
+    }
+
+    public void setLifeSpan(Integer lifeSpan) {
+        this.lifeSpan = lifeSpan;
+    }
 
     public MapDirection getDirection() {
         return direction;
     }
+    public List<Integer> getGenList() { return genList;}
 }

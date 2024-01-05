@@ -1,5 +1,6 @@
 package project.Maps;
 
+import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
 import project.MapElements.Animal;
 import project.MapElements.Plant;
@@ -14,6 +15,7 @@ public abstract class AbstractMap {
 
     Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
     Map<Vector2d, Plant> plantMap = new HashMap<>();
+    List<Animal> deadAnimals = new ArrayList<>();
     static Random random = new Random();
 
     public AbstractMap(GlobalSettings globalSettings) {
@@ -40,11 +42,12 @@ public abstract class AbstractMap {
     public void prepareMap(int numberOfAnimals, int numberOfPlants){
         for (int i = 0; i < numberOfAnimals; i++){
             Vector2d randomVector = Vector2d.generateRandomVector(globalSettings.mapWidth(), globalSettings.mapHeight());
-            addAnimal(randomVector,
-                    new Animal(Animal.generateRandomGenList(globalSettings.genomLength()),
-                            randomVector,
-                            globalSettings.initialEnergy(),
-                            globalSettings));
+            Animal newAnimal = new Animal(Animal.generateRandomGenList(globalSettings.genomLength()),
+                    randomVector,
+                    globalSettings.initialEnergy(),
+                    globalSettings);
+            newAnimal.setBornDay(currentDay);
+            addAnimal(randomVector, newAnimal);
         }
         for (int i = 0; i < numberOfPlants; i++){
             growPlant();
@@ -58,6 +61,12 @@ public abstract class AbstractMap {
             for (Animal animal : animalList){
                 if (animal.getEnergy() > 0){
                     addAnimal(animal.getPosition(), animal);
+                }
+                else{
+                    System.out.println("dzien smierci: " + currentDay + " liczba dzieci: " + animal.getChildCounter());
+                    animal.setDayOfDeath(currentDay);
+                    animal.setLifeSpan(currentDay - animal.getBornDay());
+                    deadAnimals.add(animal);
                 }
             }});
     }
@@ -75,7 +84,7 @@ public abstract class AbstractMap {
         }));
     }
 
-    int getAverageEnergy(){
+    public int getAverageEnergy(){
         AtomicInteger energy = new AtomicInteger(0);
         AtomicInteger animalsCounter = new AtomicInteger(0);
         animalsMap.forEach((vector2d, animals) -> animals.forEach(animal -> energy.addAndGet(animal.getEnergy())));
@@ -83,7 +92,7 @@ public abstract class AbstractMap {
         return energy.get() / animalsCounter.get();
     }
 
-    List<Animal> figureOutAnimalReproductionConflict(Vector2d position){
+    public List<Animal> figureOutAnimalReproductionConflict(Vector2d position){
         Animal animal1;
         Animal animal2;
         if (animalsMap.get(position).size() > 2){
@@ -99,7 +108,7 @@ public abstract class AbstractMap {
         return new ArrayList<>(List.of(animal1, animal2));
     }
 
-    Animal figureOutEatingConflict(Vector2d position){
+    public Animal figureOutEatingConflict(Vector2d position){
         List<Animal> animalList = animalsMap.get(position);
         animalList.sort(Comparator.comparingInt(Animal::getEnergy));
         List<Animal> animalsWithMostEnergy = new ArrayList<>(animalList.subList(0, 2));
@@ -162,6 +171,31 @@ public abstract class AbstractMap {
         plantMap.put(new Vector2d(x, y), new Plant());
     }
 
+    public String getMostPopularGenotype() {
+        Map<List<Integer>, Integer> genotypeMap = new HashMap<>();
+        animalsMap.forEach((vector2d, animalList) -> {
+            for (Animal animal : animalList){
+                if (genotypeMap.containsKey(animal.getGenList())){
+                    Integer value = genotypeMap.get(animal.getGenList());
+                    genotypeMap.put(animal.getGenList(), value+1);
+                }
+                else{
+                    genotypeMap.put(animal.getGenList(), 1);
+                }
+            }
+        });
+        List<List<Integer>> lists = genotypeMap.keySet().stream().toList();
+        List<Integer> mostPopularGenotype = lists.get(0);
+        int mostNumber = genotypeMap.get(lists.get(0));
+        for (List<Integer> list : lists){
+            if (genotypeMap.get(list) > mostNumber){
+                mostNumber = genotypeMap.get(list);
+                mostPopularGenotype = list;
+            }
+        }
+        return mostPopularGenotype.toString() + " it is owned by " + mostNumber + " animal\\animals";
+    }
+
     public Map<Vector2d, List<Animal>> getAnimalsMap() {
         return animalsMap;
     }
@@ -176,6 +210,27 @@ public abstract class AbstractMap {
             count += animalList.size();
         }
         return count;
+    }
+
+    public void setCurrentDay(int currentDay) {
+        this.currentDay = currentDay;
+    }
+
+    public int getAverageLifeSpan(){
+        System.out.println(deadAnimals.size());
+        if (deadAnimals.isEmpty()){
+            return 0;
+        }
+        int totalAge = 0;
+        for (Animal deadAnimal: deadAnimals){
+            try{
+                totalAge += deadAnimal.getLifeSpan();
+            }
+            catch (AnimalNotDeadYetException e){
+                e.printStackTrace();
+            }
+        }
+        return totalAge / deadAnimals.size();
     }
     public int getPlantNumber() {
         return plantMap.values().size();

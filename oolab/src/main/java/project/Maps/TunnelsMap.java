@@ -19,10 +19,6 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
         }
     }
 
-    @Override
-    public void deleteDeadAnimals() {
-        super.deleteDeadAnimals();
-    }
 
     @Override
     public void moveEachAnimal() {
@@ -76,36 +72,12 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
     }
 
     @Override
-    public void animalReproduce() {
-        super.animalReproduce();
-    }
-
-    @Override
     public void growPlants() {
         for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
             super.growPlant();
         }
     }
 
-    @Override
-    public int getAnimalNumber() {
-        return super.getAnimalNumber();
-    }
-
-    @Override
-    public int getPlantNumber() {
-        return super.getPlantNumber();
-    }
-
-    @Override
-    public int getAverageEnergy() {
-        return super.getAverageEnergy();
-    }
-
-    @Override
-    public Animal figureOutEatingConflict(Vector2d position) {
-        return super.figureOutEatingConflict(position);
-    }
 
     public Map<Vector2d, Vector2d> getTunnelMap(){
         return tunnelMap;

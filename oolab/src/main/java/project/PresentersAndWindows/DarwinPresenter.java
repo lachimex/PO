@@ -1,4 +1,4 @@
-package project;
+package project.PresentersAndWindows;
 
 import agh.ics.oop.model.Grass;
 import agh.ics.oop.model.WorldElement;
@@ -16,6 +16,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.RowConstraints;
 import javafx.scene.layout.StackPane;
 import javafx.util.Duration;
+import project.GlobalSettings;
 import project.MapElements.Animal;
 import project.MapElements.Plant;
 import project.Maps.*;
@@ -57,7 +58,9 @@ public class DarwinPresenter {
         pausedInfo.setText("Animals: " + map.getAnimalNumber()
                 + "\nPlants: " + map.getPlantNumber()
                 + "\nFree fields: " + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size())
-                + "\nAverage energy: " + map.getAverageEnergy());
+                + "\nAverage energy: " + map.getAverageEnergy()
+                + "\nMost popular genotype: " + map.getMostPopularGenotype()
+                + "\nAverage Lifespan: " + map.getAverageLifeSpan());
     }
 
     public void setGlobalSettings(GlobalSettings globalSettings) {
@@ -155,7 +158,9 @@ public class DarwinPresenter {
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.5), event -> {
                     if (!paused){
-                        dayLabel.setText(Integer.toString(dayCounter++));
+                        dayLabel.setText(Integer.toString(dayCounter));
+                        map.setCurrentDay(dayCounter);
+                        dayCounter += 1;
                         drawMap();
                         map.deleteDeadAnimals();
                         map.moveEachAnimal();

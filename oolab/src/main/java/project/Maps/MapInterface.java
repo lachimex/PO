@@ -19,5 +19,8 @@ public interface MapInterface {
     int getAnimalNumber();
     int getPlantNumber();
     int getAverageEnergy();
+    String getMostPopularGenotype();
+    int getAverageLifeSpan();
+    void setCurrentDay(int dayCounter);
     Animal figureOutEatingConflict(Vector2d position);
 }

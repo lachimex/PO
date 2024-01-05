@@ -1,4 +1,4 @@
-package project;
+package project.PresentersAndWindows;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -7,6 +7,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import project.BehaviourVariant;
+import project.GlobalSettings;
 import project.Maps.GlobeMap;
 import project.Maps.MapVariant;
 import project.Maps.TunnelsMap;
