@@ -13,10 +13,8 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+
 import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -66,12 +64,13 @@ public class SimulationPresenter implements MapChangeListener {
 
         List<WorldElement> worldElementList = worldMap.getElements().stream().toList();
         for (WorldElement element : worldElementList) {
-            Label label = new Label(element.toString());
-            GridPane.setHalignment(label, HPos.CENTER);
-            if (element instanceof Grass && worldMap.objectAt(element.getPosition()) instanceof Animal){
+            if (element instanceof Grass && worldMap.objectAt(element.getPosition()) instanceof Animal) {
                 continue;
             }
-            mapGrid.add(label, element.getPosition().getX() + 1 - worldMap.getCurrentBounds().lowerLeft().getX(),
+            WorldElementBox worldElementBox = new WorldElementBox(element);
+            VBox vbox = worldElementBox.getImageBox();
+            mapGrid.add(vbox,
+                    element.getPosition().getX() + 1 - worldMap.getCurrentBounds().lowerLeft().getX(),
                     rows - element.getPosition().getY() + worldMap.getCurrentBounds().lowerLeft().getY());
         }
 

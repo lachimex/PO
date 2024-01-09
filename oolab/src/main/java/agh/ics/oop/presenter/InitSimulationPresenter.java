@@ -4,6 +4,7 @@ import agh.ics.oop.OptionsParser;
 import agh.ics.oop.Simulation;
 import agh.ics.oop.SimulationApp;
 import agh.ics.oop.SimulationEngine;
+import agh.ics.oop.model.FileMapDisplay;
 import agh.ics.oop.model.GrassField;
 import agh.ics.oop.model.MoveDirection;
 import agh.ics.oop.model.Vector2d;
@@ -29,6 +30,7 @@ public class InitSimulationPresenter {
         GrassField grassField = new GrassField(10);
         simulationApp.getPresenter().setWorldMap(grassField);
         grassField.registerObservator(simulationApp.getPresenter());
+        grassField.registerObservator(new FileMapDisplay());
         Simulation simulation = new Simulation(positions, directions, grassField);
         SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
         simulationEngine.runAsync();

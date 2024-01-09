@@ -22,4 +22,9 @@ public class Grass implements WorldElement{
     public Vector2d getPosition() {
         return position;
     }
+
+    @Override
+    public String getFileName() {
+        return "grass.png";
+    }
 }

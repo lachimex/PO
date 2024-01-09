@@ -11,10 +11,10 @@ public abstract class AbstractWorldMap{
     protected List<MapChangeListener> observatorList = new ArrayList<>();
     private final MapVisualizer mapVisualizer = new MapVisualizer(getWorldMap());
     public static int nextMapId = 0;
-    protected int mapId;
+    protected Integer mapId;
 
     public String getId(){
-        return "Map id: " + mapId;
+        return mapId.toString();
     }
 
     public void registerObservator(MapChangeListener observator){
