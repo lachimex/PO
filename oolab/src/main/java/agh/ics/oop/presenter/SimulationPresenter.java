@@ -64,7 +64,7 @@ public class SimulationPresenter implements MapChangeListener {
 
         List<WorldElement> worldElementList = worldMap.getElements().stream().toList();
         for (WorldElement element : worldElementList) {
-            if (element instanceof Grass && worldMap.objectAt(element.getPosition()) instanceof Animal) {
+            if (element instanceof Grass && worldMap.objectAt(element.getPosition()).map(worldElement -> worldElement instanceof Animal).get()) {
                 continue;
             }
             WorldElementBox worldElementBox = new WorldElementBox(element);

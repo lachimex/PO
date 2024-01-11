@@ -15,6 +15,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class InitSimulationPresenter {
@@ -31,6 +32,9 @@ public class InitSimulationPresenter {
         simulationApp.getPresenter().setWorldMap(grassField);
         grassField.registerObservator(simulationApp.getPresenter());
         grassField.registerObservator(new FileMapDisplay());
+        grassField.registerObservator((worldMap, message) -> {
+            System.out.println(LocalDateTime.now() + " " + message);
+        });
         Simulation simulation = new Simulation(positions, directions, grassField);
         SimulationEngine simulationEngine = new SimulationEngine(List.of(simulation));
         simulationEngine.runAsync();

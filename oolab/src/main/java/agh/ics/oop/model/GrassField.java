@@ -4,6 +4,7 @@ import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import static java.lang.Math.sqrt;
 
@@ -24,7 +25,21 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
 
     @Override
     public boolean canMoveTo(Vector2d position) {
-        return !(objectAt(position) instanceof Animal);
+        Optional<WorldElement> optionalWorldElement = super.objectAt(position);
+        return optionalWorldElement.map(worldElement -> worldElement instanceof Grass).orElse(true);
+    }
+
+    @Override
+    public Optional<WorldElement> objectAt(Vector2d position){
+        Optional<WorldElement> optionalWorldElement = super.objectAt(position);
+        if (optionalWorldElement.isPresent()){
+            return optionalWorldElement;
+        }else if(grassMap.containsKey(position)){
+            return Optional.of(grassMap.get(position));
+        }
+        else{
+            return optionalWorldElement;
+        }
     }
 
     @Override
@@ -33,18 +48,8 @@ public class GrassField extends AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        if (animalMap.containsKey(position)) {
-            return super.objectAt(position);
-        } else return grassMap.getOrDefault(position, null);
-    }
-
-    @Override
     public Collection<WorldElement> getElements() {
-        Set<Grass> grassSet = new LinkedHashSet<>(grassMap.values());
-        List<WorldElement> worldElementList = new ArrayList<>(super.getElements());
-        worldElementList.addAll(grassSet);
-        return worldElementList;
+        return Stream.concat(grassMap.values().stream(), super.getElements().stream()).toList();
     }
 
 
