@@ -4,7 +4,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="root" minHeight="550.0" minWidth="850.0" stylesheets="Settings.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.SettingsPresenter">
+<BorderPane fx:id="root" minHeight="900" minWidth="1600" stylesheets="Settings.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.SettingsPresenter">
 
     <top>
         <Label fx:id="errorInfo" BorderPane.alignment="CENTER" />
@@ -54,12 +54,12 @@
 
             <VBox alignment="CENTER">
                 <Label text="Energy needed to reproduce"/>
-                <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="1" />
+                <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
             </VBox>
 
             <VBox alignment="CENTER">
                 <Label text="Energy loss after reproduction"/>
-                <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="1" />
+                <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="5" />
             </VBox>
 
             <VBox alignment="CENTER">
@@ -82,14 +82,19 @@
                 <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
             </VBox>
 
+            <VBox alignment="CENTER">
+                <Label text="zapisywanie do pliku"/>
+                <ChoiceBox fx:id="savingToFile" style="-fx-max-width: 250;" />
+            </VBox>
         </VBox>
     </center>
 
     <bottom>
         <Button fx:id="start" alignment="CENTER" onAction="#startTheSim" text="GO!" BorderPane.alignment="CENTER">
          <BorderPane.margin>
-            <Insets bottom="10.0" />
-         </BorderPane.margin></Button>
+            <Insets bottom="100" />
+         </BorderPane.margin>
+        </Button>
     </bottom>
 
 </BorderPane>

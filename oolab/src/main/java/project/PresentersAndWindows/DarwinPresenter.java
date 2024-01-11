@@ -8,23 +8,29 @@ import javafx.animation.Timeline;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.geometry.HPos;
+import javafx.geometry.Pos;
+import javafx.geometry.VPos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
-import javafx.scene.layout.StackPane;
+import javafx.scene.layout.*;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
+import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
 import project.MapElements.Animal;
 import project.MapElements.Plant;
 import project.Maps.*;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.*;
 
 public class DarwinPresenter {
     private GlobalSettings globalSettings;
@@ -39,12 +45,16 @@ public class DarwinPresenter {
     @FXML
     private Button pauseResumeButton;
     @FXML
-    private Label pausedInfo;
+    private Label info;
+    @FXML
+    private Label animalSpecificInfo;
     private Timeline timeline;
+    Animal trackedAnimal;
+    boolean savingToFile = false;
+    int numOfSim;
 
     public void handlePauseResumeRequest(){
         if (paused){
-            pausedInfo.setText("");
             pauseResumeButton.setText("pauza");
             paused = false;
         }
@@ -55,7 +65,7 @@ public class DarwinPresenter {
     }
 
     private void displayInfo(){
-        pausedInfo.setText("Animals: " + map.getAnimalNumber()
+        info.setText("Animals: " + map.getAnimalNumber()
                 + "\nPlants: " + map.getPlantNumber()
                 + "\nFree fields: " + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size())
                 + "\nAverage energy: " + map.getAverageEnergy()
@@ -80,14 +90,19 @@ public class DarwinPresenter {
     public void drawMap() {
         clearGrid();
         displayInfo();
+        if (trackedAnimal != null){
+            animalInfo(trackedAnimal);
+        }
+        mapGrid.setAlignment(Pos.CENTER);
         int columns = globalSettings.mapWidth();
         int rows = globalSettings.mapHeight();
+        int cellSize = (int) Math.min((double) 900 / columns, (double) 900 / rows); // max size 900x900
         for (int col = 0; col <= columns; col++) {
-            mapGrid.getColumnConstraints().add(new ColumnConstraints(20));
+            mapGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
         }
 
         for (int row = 0; row <= rows; row++) {
-            mapGrid.getRowConstraints().add(new RowConstraints(20));
+            mapGrid.getRowConstraints().add(new RowConstraints(cellSize));
         }
 
 
@@ -109,19 +124,23 @@ public class DarwinPresenter {
 
         Map<Vector2d, List<Animal>> animalsMap = map.getAnimalsMap();
         Map<Vector2d, Plant> plantMap = map.getPlantMap();
+        int maxDisplayedEnergy = globalSettings.initialEnergy() * 3;
+        occupiedPlacesSet.clear();
         plantMap.forEach((position, plant) -> {
             occupiedPlacesSet.add(position);
-            Label plantCell = new Label();
-            StackPane stackPane = new StackPane(plantCell);
-            stackPane.setStyle("-fx-background-color: green");
-            GridPane.setFillHeight(stackPane, true);
-            GridPane.setFillWidth(stackPane, true);
-            mapGrid.add(stackPane, position.getX() + 1, globalSettings.mapHeight() - position.getY());
+            Circle plantCell = new Circle();
+            VBox vBox = new VBox(plantCell);
+            vBox.setMaxWidth(0.6 * cellSize);
+            vBox.setMaxHeight(0.6 * cellSize);
+            vBox.setAlignment(Pos.CENTER);
+            GridPane.setHalignment(vBox, HPos.CENTER);
+            GridPane.setValignment(vBox, VPos.CENTER);
+            vBox.setStyle("-fx-background-color: green");
+            mapGrid.add(vBox, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
         animalsMap.forEach((position, animals) -> {
             occupiedPlacesSet.add(position);
-            Label animalCell = new Label();
-            StackPane stackPane = new StackPane(animalCell);
+            Circle animalCell = new Circle();
             Animal strongestAnimal;
             if (animals.size() > 1){
                 strongestAnimal = map.figureOutEatingConflict(animals.get(0).getPosition());
@@ -129,13 +148,41 @@ public class DarwinPresenter {
             else{
                 strongestAnimal = animals.get(0);
             }
-            stackPane.setStyle("-fx-background-color: #f80101");
-            ColorAdjust colorAdjust = new ColorAdjust();
-            colorAdjust.setSaturation((double) strongestAnimal.getEnergy() / globalSettings.initialEnergy());
-            stackPane.setEffect(colorAdjust);
-            GridPane.setFillHeight(stackPane, true);
-            GridPane.setFillWidth(stackPane, true);
-            mapGrid.add(stackPane, position.getX() + 1, globalSettings.mapHeight() - position.getY());
+            VBox vBox = new VBox(animalCell);
+            vBox.setMaxWidth(0.6 * cellSize);
+            vBox.setMaxHeight(0.6 * cellSize);
+            vBox.setAlignment(Pos.CENTER);
+            GridPane.setHalignment(vBox, HPos.CENTER);
+            GridPane.setValignment(vBox, VPos.CENTER);
+            Rectangle invRect = new Rectangle(20, 20, Color.TRANSPARENT);
+            invRect.setMouseTransparent(false);
+            vBox.setMouseTransparent(true);
+            invRect.setOnMouseEntered(e -> {
+                if (paused){
+                    invRect.setCursor(Cursor.HAND);
+                }
+            });
+            invRect.setOnMouseExited(e -> {invRect.setCursor(Cursor.DEFAULT);});
+            invRect.setOnMouseClicked(event -> {
+                if (paused){
+                    if (trackedAnimal != null){
+                        trackedAnimal.setIfTracked(false);
+                    }
+                    strongestAnimal.setIfTracked(true);
+                    trackedAnimal = strongestAnimal;
+                    animalInfo(trackedAnimal);
+                }
+            });
+            double rgbScalar = 255 * (1 - (Math.min((double) strongestAnimal.getEnergy() / maxDisplayedEnergy, 1)));
+            if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
+                vBox.setStyle("-fx-background-color: rgb(28,140,135)");
+            }
+            else{
+                vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar  + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
+            }
+
+            mapGrid.add(vBox,position.getX() + 1, globalSettings.mapHeight() - position.getY());
+            mapGrid.add(invRect, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
         if (globalSettings.mapVariant().equals(MapVariant.UNDERGROUND_TUNNELS)){
             Map<Vector2d, Vector2d> tunnelsMap = ((TunnelsMap) map).getTunnelMap();
@@ -154,9 +201,77 @@ public class DarwinPresenter {
         }
     }
 
+    public void animalInfo(Animal animal){
+        String daysOfLivingInfo;
+        String dayOfDeathInfo;
+        try{
+            daysOfLivingInfo = "Days of living: " + animal.getLifeSpan() + "\n";
+        } catch(AnimalNotDeadYetException e){
+            daysOfLivingInfo = "";
+        }
+        try{
+            dayOfDeathInfo = "Day of death: " + animal.getDayOfDeath() + "\n";
+        } catch (AnimalNotDeadYetException e){
+            dayOfDeathInfo = "";
+        }
+        animalSpecificInfo.setText(
+                "Genom: " + animal.getGenList() + "\n" +
+                "Active Gen: " + animal.getActiveGen() + "\n" +
+                "Energy: " + animal.getEnergy() + "\n" +
+                "Plants Eaten: " + animal.getPlantEatenCounter() + "\n" +
+                "Children: " + animal.getChildCounter() + "\n" +
+                "Descendants: " + animal.getDescendants() + "\n" +
+                daysOfLivingInfo + dayOfDeathInfo
+
+        );
+    }
+
+    public int getNumOfSim() {
+        return numOfSim;
+    }
+
+    public void setNumOfSim(int numOfSim) {
+        this.numOfSim = numOfSim;
+    }
+
+    public void enableSavingToCSV(){
+        savingToFile = true;
+        Path filePath = Path.of("data_from_map" + numOfSim + ".csv");
+        try {
+            Files.write(filePath, Collections.emptyList());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void saveDataToFile(){
+        Path filePath = Path.of("data_from_map" + numOfSim + ".csv");
+        try {
+            if (Files.size(filePath) == 0){ //it procedes when file exists but it is empty
+                try (FileWriter out = new FileWriter(String.valueOf(filePath), true)) {
+                    out.write("Animals, Plants, Free fields, Average energy, Most popular genotype, Average Lifespan\n");
+                } catch (IOException e){
+                    throw new RuntimeException(e);
+                }
+            }
+            else{
+                try (FileWriter out = new FileWriter(String.valueOf(filePath), true)) {
+                    out.write(map.getAnimalNumber() + ", " + map.getPlantNumber() + ", "
+                            + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size()) + ", "
+                            + map.getAverageEnergy() + ", " + map.getAverageLifeSpan() + "\n");
+                } catch (IOException e){
+                    throw new RuntimeException(e);
+                }
+            }
+        } catch (IOException e) { //it catches when file doesnt exist
+            e.printStackTrace();
+        }
+    }
+
     public void startTheSim(){
         timeline = new Timeline(
-                new KeyFrame(Duration.seconds(0.5), event -> {
+                new KeyFrame(Duration.seconds(0.1), event -> {
                     if (!paused){
                         dayLabel.setText(Integer.toString(dayCounter));
                         map.setCurrentDay(dayCounter);
@@ -167,6 +282,9 @@ public class DarwinPresenter {
                         map.plantConsumption();
                         map.animalReproduce();
                         map.growPlants();
+                        if (savingToFile){
+                            saveDataToFile();
+                        }
                     }
                     if (map.getAnimalNumber() == 0){
                         timeline.stop();
@@ -176,6 +294,7 @@ public class DarwinPresenter {
         timeline.setCycleCount(Animation.INDEFINITE); // Run indefinitely
         timeline.play();
        }
+
 
 }
 

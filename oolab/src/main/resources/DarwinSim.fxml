@@ -4,11 +4,21 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<BorderPane fx:id="root" minHeight="550.0" minWidth="850.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.DarwinPresenter">
+<BorderPane fx:id="root" minHeight="900" minWidth="1600" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.DarwinPresenter">
 
     <left>
-        <Label fx:id="pausedInfo" textAlignment="CENTER" BorderPane.alignment="CENTER" />
+        <Label fx:id="info" textAlignment="CENTER" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets left="100.0" />
+         </BorderPane.margin></Label>
     </left>
+
+    <right>
+        <Label fx:id="animalSpecificInfo" textAlignment="CENTER" BorderPane.alignment="CENTER">
+         <padding>
+            <Insets right="100.0" />
+         </padding></Label>
+    </right>
 
     <center>
         <VBox alignment="CENTER">

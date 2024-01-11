@@ -63,7 +63,6 @@ public abstract class AbstractMap {
                     addAnimal(animal.getPosition(), animal);
                 }
                 else{
-                    System.out.println("dzien smierci: " + currentDay + " liczba dzieci: " + animal.getChildCounter());
                     animal.setDayOfDeath(currentDay);
                     animal.setLifeSpan(currentDay - animal.getBornDay());
                     deadAnimals.add(animal);
@@ -217,7 +216,6 @@ public abstract class AbstractMap {
     }
 
     public int getAverageLifeSpan(){
-        System.out.println(deadAnimals.size());
         if (deadAnimals.isEmpty()){
             return 0;
         }
@@ -234,5 +232,9 @@ public abstract class AbstractMap {
     }
     public int getPlantNumber() {
         return plantMap.values().size();
+    }
+
+    public int getCurrentDay(){
+        return currentDay;
     }
 }

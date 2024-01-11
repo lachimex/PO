@@ -25,6 +25,8 @@ public class Animal implements MapElement {
     private Integer dayOfDeath = null;
     private Integer lifeSpan = null;
     private int bornDay;
+
+    private boolean ifTracked;
     public Animal(List<Integer> genList, Vector2d position, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
         this.globalSettings = globalSettings;
@@ -99,6 +101,8 @@ public class Animal implements MapElement {
         }
         Animal child = new Animal(gensOfChild, this.position, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
         child.mutate(globalSettings);
+        this.descendantList.add(child);
+        secondParent.descendantList.add(child);
         return child;
     }
 
@@ -124,7 +128,7 @@ public class Animal implements MapElement {
         return this.energy;
     }
 
-    int getDescendants(){
+    public int getDescendants(){
         int descendants_number = 0;
         if (descendantList.isEmpty()){
             return descendants_number;
@@ -214,4 +218,20 @@ public class Animal implements MapElement {
         return direction;
     }
     public List<Integer> getGenList() { return genList;}
+
+    public int getActiveGen(){
+        return activeGen;
+    }
+
+    public int getPlantEatenCounter() {
+        return plantEatenCounter;
+    }
+
+    public boolean isTracked() {
+        return ifTracked;
+    }
+
+    public void setIfTracked(boolean ifTracked) {
+        this.ifTracked = ifTracked;
+    }
 }
