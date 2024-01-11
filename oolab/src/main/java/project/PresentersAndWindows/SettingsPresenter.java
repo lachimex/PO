@@ -55,6 +55,8 @@ public class SettingsPresenter {
 
     @FXML
     private ChoiceBox<BehaviourVariant> mutationVariant;
+    @FXML
+    private ChoiceBox<String> savingToFile;
 
     @FXML
     private TextField genomLength;
@@ -62,6 +64,7 @@ public class SettingsPresenter {
     private Label errorInfo;
 
     private DarwinWindow darwinWindow;
+    private int numOfSim = 1;
 
     @FXML
     private void initialize(){
@@ -77,6 +80,12 @@ public class SettingsPresenter {
         );
         mutationVariant.setItems(mutationVariants);
         mutationVariant.setValue(BehaviourVariant.COMPLETE_PREDESTINATION);
+        ObservableList<String> savingToFileVariants = FXCollections.observableArrayList(
+                "yes",
+                "no"
+        );
+        savingToFile.setItems(savingToFileVariants);
+        savingToFile.setValue("no");
     }
 
     public void startTheSim() throws IOException, InterruptedException {
@@ -98,21 +107,25 @@ public class SettingsPresenter {
                     mutationVariant.getValue(),
                     Integer.parseInt(genomLength.getText().replaceAll("\\s", ""))
             );
-        if (checkSettings(globalSettings)){
-                errorInfo.setText("wszystko gra, startujemy z symulacja");
-                darwinWindow = new DarwinWindow(globalSettings);
-                darwinWindow.start(new Stage());
-                if (globalSettings.mapVariant().equals(MapVariant.GLOBE)){
-                    GlobeMap globeMap = new GlobeMap(globalSettings);
-                    globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
-                    darwinWindow.getPresenter().setMap(globeMap);
-                } else{
-                    TunnelsMap tunnelsMap = new TunnelsMap(globalSettings);
-                    tunnelsMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
-                    darwinWindow.getPresenter().setMap(tunnelsMap);
+            if (checkSettings(globalSettings)){
+                    errorInfo.setText("wszystko gra, startujemy z symulacja");
+                    darwinWindow = new DarwinWindow(globalSettings);
+                    darwinWindow.start(new Stage());
+                    if (globalSettings.mapVariant().equals(MapVariant.GLOBE)){
+                        GlobeMap globeMap = new GlobeMap(globalSettings);
+                        globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+                        darwinWindow.getPresenter().setMap(globeMap);
+                    } else{
+                        TunnelsMap tunnelsMap = new TunnelsMap(globalSettings);
+                        tunnelsMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+                        darwinWindow.getPresenter().setMap(tunnelsMap);
+                    }
+                    darwinWindow.getPresenter().setNumOfSim(numOfSim++);
+                    if (savingToFile.getValue().equals("yes")){
+                        darwinWindow.getPresenter().enableSavingToCSV();
+                    }
+                    darwinWindow.getPresenter().startTheSim();
                 }
-                darwinWindow.getPresenter().startTheSim();
-            }
         }
     }
     boolean checkSettings(GlobalSettings settings) {
