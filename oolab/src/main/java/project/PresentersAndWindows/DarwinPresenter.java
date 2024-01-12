@@ -48,6 +48,12 @@ public class DarwinPresenter {
     private Label info;
     @FXML
     private Label animalSpecificInfo;
+    @FXML
+    private Button showAnimalsWithGen;
+    boolean ifAnimalsWithGenShowing = false;
+    @FXML
+    private Button showPreferredFields;
+    boolean ifPreferredFieldsShowing = false;
     private Timeline timeline;
     Animal trackedAnimal;
     boolean savingToFile = false;
@@ -174,7 +180,14 @@ public class DarwinPresenter {
                 }
             });
             double rgbScalar = 255 * (1 - (Math.min((double) strongestAnimal.getEnergy() / maxDisplayedEnergy, 1)));
-            if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
+            if (ifAnimalsWithGenShowing){
+                if (strongestAnimal.getGenList().toString().equals(map.getMostPopularGenotype())){
+                    vBox.setStyle("-fx-background-color: rgb(135,24,197)");
+                }
+                else{
+                    vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar  + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
+                }
+            } else if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
                 vBox.setStyle("-fx-background-color: rgb(28,140,135)");
             }
             else{
@@ -269,6 +282,26 @@ public class DarwinPresenter {
         }
     }
 
+    public void handleAnimalsWithMostPopularGen(){
+        if (!ifAnimalsWithGenShowing){
+            showAnimalsWithGen.setText("Ukryj zwierzeta z najpopularniejszym genem");
+        } else{
+            showAnimalsWithGen.setText("Pokaz zwierzeta z najpopularniejszym genem");
+        }
+        ifAnimalsWithGenShowing = !ifAnimalsWithGenShowing;
+        drawMap();
+    }
+
+    public void handlePreferredFields(){
+        if (ifPreferredFieldsShowing){
+            showPreferredFields.setText("Ukryj pola preferowane przez rosliny");
+        } else{
+            showPreferredFields.setText("Ukryj pola preferowane przez rosliny");
+        }
+        ifPreferredFieldsShowing = !ifPreferredFieldsShowing;
+        drawMap();
+    }
+
     public void startTheSim(){
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.1), event -> {
@@ -276,12 +309,12 @@ public class DarwinPresenter {
                         dayLabel.setText(Integer.toString(dayCounter));
                         map.setCurrentDay(dayCounter);
                         dayCounter += 1;
-                        drawMap();
                         map.deleteDeadAnimals();
                         map.moveEachAnimal();
                         map.plantConsumption();
                         map.animalReproduce();
                         map.growPlants();
+                        drawMap();
                         if (savingToFile){
                             saveDataToFile();
                         }

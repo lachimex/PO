@@ -192,7 +192,7 @@ public abstract class AbstractMap {
                 mostPopularGenotype = list;
             }
         }
-        return mostPopularGenotype.toString() + " it is owned by " + mostNumber + " animal\\animals";
+        return mostPopularGenotype.toString();
     }
 
     public Map<Vector2d, List<Animal>> getAnimalsMap() {

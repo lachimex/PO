@@ -7,10 +7,15 @@
 <BorderPane fx:id="root" minHeight="900" minWidth="1600" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.DarwinPresenter">
 
     <left>
-        <Label fx:id="info" textAlignment="CENTER" BorderPane.alignment="CENTER">
-         <BorderPane.margin>
-            <Insets left="100.0" />
-         </BorderPane.margin></Label>
+        <VBox alignment="CENTER">
+            <Label fx:id="info" textAlignment="CENTER" BorderPane.alignment="CENTER">
+                <BorderPane.margin>
+                    <Insets left="100.0" />
+                </BorderPane.margin>
+            </Label>
+            <Button fx:id="showAnimalsWithGen" onAction="#handleAnimalsWithMostPopularGen" text="Pokaz dominujacy gen"/>
+            <Button fx:id="showPreferredFields" onAction="#handlePreferredFields" text="Pokaz pola preferowane przez rosliny"/>
+        </VBox>
     </left>
 
     <right>
