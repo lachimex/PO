@@ -55,7 +55,7 @@ public class Animal implements MapElement {
         plantEatenCounter++;
     }
 
-    public Animal produce(Animal secondParent){
+    public Animal produce(Animal secondParent, int currentDay){
         int side = random.nextInt(2); //side of gens from stronger animal 0: left 1: right
         Animal strongerAnimal;
         Animal weakerAnimal;
@@ -103,6 +103,7 @@ public class Animal implements MapElement {
         child.mutate(globalSettings);
         this.descendantList.add(child);
         secondParent.descendantList.add(child);
+        child.setBornDay(currentDay);
         return child;
     }
 

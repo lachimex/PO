@@ -1,6 +1,7 @@
 package project.Maps;
 
 import project.MapElements.Animal;
+import project.MapElements.AnimalsGroup;
 import project.MapElements.Plant;
 
 import java.util.List;
@@ -13,7 +14,7 @@ public interface MapInterface {
     void animalReproduce();
     void growPlants();
 
-    Map<Vector2d, List<Animal>> getAnimalsMap();
+    Map<Vector2d, AnimalsGroup> getAnimalsMap();
     Map<Vector2d, Plant> getPlantMap();
 
     int getAnimalNumber();

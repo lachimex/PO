@@ -2,6 +2,7 @@ package project.Maps;
 
 import project.GlobalSettings;
 import project.MapElements.Animal;
+import project.MapElements.AnimalsGroup;
 
 import java.util.*;
 
@@ -22,10 +23,10 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
 
     @Override
     public void moveEachAnimal() {
-        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        List<AnimalsGroup> values = new ArrayList<>(animalsMap.values());
         super.animalsMap.clear();
-        values.forEach(animalList -> {
-            for (Animal animal : animalList){
+        values.forEach(animalsGroup -> {
+            for (Animal animal : animalsGroup.getAnimalList()){
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
                 if (tunnelMap.containsKey(animal.getPosition())){
@@ -59,11 +60,7 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
             if (!tunnelMap.containsKey(position)){
                 Animal wonAnimal = null;
                 if (plantMap.containsKey(position)){
-                    if (animals.size() > 1){
-                        wonAnimal = super.figureOutEatingConflict(position);
-                    } else {
-                        wonAnimal = animals.get(0);
-                    }
+                    wonAnimal = super.figureOutEatingConflict(position);
                     if (wonAnimal != null){
                         wonAnimal.eat();
                         plantMap.remove(position);

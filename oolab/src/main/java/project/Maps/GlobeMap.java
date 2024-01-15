@@ -4,6 +4,7 @@ package project.Maps;
 import javafx.application.Platform;
 import project.GlobalSettings;
 import project.MapElements.Animal;
+import project.MapElements.AnimalsGroup;
 
 import java.util.*;
 
@@ -19,10 +20,10 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void moveEachAnimal() {
-        Collection<List<Animal>> values = new ArrayList<>(animalsMap.values());
+        List<AnimalsGroup> values = new ArrayList<>(animalsMap.values());
         super.animalsMap.clear();
-        values.forEach(animalList -> {
-            for (Animal animal : animalList){
+        values.forEach(animalsGroup -> {
+            for (Animal animal : animalsGroup.getAnimalList()){
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
                 if (animal.getPosition().getX() >= globalSettings.mapWidth()){
@@ -47,13 +48,9 @@ public class GlobeMap extends AbstractMap implements MapInterface{
     @Override
     public void plantConsumption() {
         animalsMap.forEach((position, animals) -> {
-            Animal wonAnimal = null;
+            Animal wonAnimal;
             if (plantMap.containsKey(position)){
-                if (animals.size() > 1){
-                    wonAnimal = super.figureOutEatingConflict(position);
-                } else {
-                    wonAnimal = animals.get(0);
-                }
+                wonAnimal = super.figureOutEatingConflict(position);
             if (wonAnimal != null){
                 wonAnimal.eat();
                 plantMap.remove(position);

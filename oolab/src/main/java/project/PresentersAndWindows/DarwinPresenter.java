@@ -23,6 +23,7 @@ import javafx.util.Duration;
 import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
 import project.MapElements.Animal;
+import project.MapElements.AnimalsGroup;
 import project.MapElements.Plant;
 import project.Maps.*;
 
@@ -132,7 +133,7 @@ public class DarwinPresenter {
                 }
             }
         }
-        Map<Vector2d, List<Animal>> animalsMap = map.getAnimalsMap();
+        Map<Vector2d, AnimalsGroup> animalsMap = map.getAnimalsMap();
         Map<Vector2d, Plant> plantMap = map.getPlantMap();
         int maxDisplayedEnergy = globalSettings.initialEnergy() * 3;
         occupiedPlacesSet.clear();
@@ -148,15 +149,11 @@ public class DarwinPresenter {
             vBox.setStyle("-fx-background-color: green");
             mapGrid.add(vBox, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
-        animalsMap.forEach((position, animals) -> {
+        animalsMap.forEach((position, animalsGroup) -> {
             occupiedPlacesSet.add(position);
             Circle animalCell = new Circle();
             Animal strongestAnimal;
-            if (animals.size() > 1) {
-                strongestAnimal = map.figureOutEatingConflict(animals.get(0).getPosition());
-            } else {
-                strongestAnimal = animals.get(0);
-            }
+            strongestAnimal = animalsGroup.figureOutEatingConflict();
             VBox vBox = new VBox(animalCell);
             vBox.setMaxWidth(0.6 * cellSize);
             vBox.setMaxHeight(0.6 * cellSize);
