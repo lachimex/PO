@@ -13,10 +13,9 @@ import javafx.geometry.HPos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.RowConstraints;
+import javafx.scene.layout.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class SimulationPresenter implements MapChangeListener {
@@ -25,6 +24,8 @@ public class SimulationPresenter implements MapChangeListener {
     private GridPane mapGrid;
     @FXML
     private Label moveLabel;
+    List<WorldElementBox> worldElementBoxes = new ArrayList<>();
+    int counter = 0;
 
     public void setWorldMap(WorldMap worldMap) {
         this.worldMap = worldMap;
@@ -37,6 +38,12 @@ public class SimulationPresenter implements MapChangeListener {
     }
 
     private void drawMap() {
+        if(counter == 0){
+            for (WorldElement element : worldMap.getElements()){
+                worldElementBoxes.add(new WorldElementBox(element));
+            }
+            counter++;
+        }
         clearGrid();
         int columns = worldMap.getCurrentBounds().upperRight().getX() - worldMap.getCurrentBounds().lowerLeft().getX() + 1;
         int rows = worldMap.getCurrentBounds().upperRight().getY() - worldMap.getCurrentBounds().lowerLeft().getY() + 1;
@@ -63,16 +70,17 @@ public class SimulationPresenter implements MapChangeListener {
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.add(label, 0, rows - i);
         }
-
-        List<WorldElement> worldElementList = worldMap.getElements().stream().toList();
-        for (WorldElement element : worldElementList) {
-            Label label = new Label(element.toString());
-            GridPane.setHalignment(label, HPos.CENTER);
-            if (element instanceof Grass && worldMap.objectAt(element.getPosition()) instanceof Animal){
+        for (WorldElementBox elementBox : worldElementBoxes){
+            if (elementBox.getWorldElement() instanceof Grass && worldMap.objectAt(elementBox.getWorldElement().getPosition()).map(worldElement -> worldElement instanceof Animal).get()) {
                 continue;
             }
-            mapGrid.add(label, element.getPosition().getX() + 1 - worldMap.getCurrentBounds().lowerLeft().getX(),
-                    rows - element.getPosition().getY() + worldMap.getCurrentBounds().lowerLeft().getY());
+            if (elementBox.getWorldElement() instanceof Animal){
+                System.out.println("dupa");
+            }
+            VBox vBox = elementBox.getImageBox();
+            mapGrid.add(vBox,
+                    elementBox.getWorldElement().getPosition().getX() + 1 - worldMap.getCurrentBounds().lowerLeft().getX(),
+                    rows - elementBox.getWorldElement().getPosition().getY() + worldMap.getCurrentBounds().lowerLeft().getY());
         }
 
     }

@@ -3,6 +3,8 @@ package agh.ics.oop.model;
 import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 import org.junit.jupiter.api.Test;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -41,8 +43,8 @@ public class GrassFieldTest {
     public void objectAtTest(){
         placeAnimal1AndAnimal2();
 
-        assertEquals(grassField.objectAt(animal1.getPosition()), animal1);
-        assertEquals(grassField.objectAt(animal2.getPosition()), animal2);
+        assertEquals(grassField.objectAt(animal1.getPosition()), Optional.of(animal1));
+        assertEquals(grassField.objectAt(animal2.getPosition()), Optional.of(animal2));
     }
 
     @Test

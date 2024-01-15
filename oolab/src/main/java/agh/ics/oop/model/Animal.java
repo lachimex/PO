@@ -25,6 +25,25 @@ public class Animal implements WorldElement{
         return animalPosition;
     }
 
+    @Override
+    public String getFileName() {
+        switch (animalOrientation){
+            case SOUTH -> {
+                return "down.png";
+            }
+            case WEST -> {
+                return "left.png";
+            }
+            case EAST -> {
+                return "right.png";
+            }
+            case NORTH -> {
+                return "up.png";
+            }
+        }
+        return null;
+    }
+
     public boolean isAt(Vector2d position){
         return animalPosition.equals(position);
     }

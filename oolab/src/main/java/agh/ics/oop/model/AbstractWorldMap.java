@@ -4,6 +4,7 @@ import agh.ics.oop.model.exceptions.PositionAlreadyOccupiedException;
 import agh.ics.oop.model.util.MapVisualizer;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class AbstractWorldMap{
     protected Map<Vector2d, Animal> animalMap = new HashMap<>();
@@ -11,10 +12,10 @@ public abstract class AbstractWorldMap{
     protected List<MapChangeListener> observatorList = new ArrayList<>();
     private final MapVisualizer mapVisualizer = new MapVisualizer(getWorldMap());
     public static int nextMapId = 0;
-    protected int mapId;
+    protected Integer mapId;
 
     public String getId(){
-        return "Map id: " + mapId;
+        return mapId.toString();
     }
 
     public void registerObservator(MapChangeListener observator){
@@ -42,8 +43,12 @@ public abstract class AbstractWorldMap{
         }
     }
 
-    public WorldElement objectAt(Vector2d position){
-        return animalMap.get(position);
+    public Optional<WorldElement> objectAt(Vector2d position){
+        if (animalMap.containsKey(position)){
+            return Optional.of(animalMap.get(position));
+        }else{
+            return Optional.empty();
+        }
     }
 
     protected void move(Animal animal, MoveDirection direction, MoveValidator moveValidator){
@@ -75,5 +80,12 @@ public abstract class AbstractWorldMap{
     public String toString(){
         mapBounds = getCurrentBounds();
         return mapVisualizer.draw(mapBounds.lowerLeft(), mapBounds.upperRight());
+    }
+
+    public Collection<Animal> getOrderedAnimals(){
+        Comparator<Animal> animalComparator = Comparator
+                .comparingInt((Animal a) -> a.getPosition().getX())
+                .thenComparingInt((Animal a) -> a.getPosition().getY());
+        return animalMap.values().stream().sorted(animalComparator).toList();
     }
 }

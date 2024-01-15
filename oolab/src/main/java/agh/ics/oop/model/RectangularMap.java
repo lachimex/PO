@@ -15,11 +15,6 @@ public class RectangularMap extends AbstractWorldMap implements WorldMap{
     }
 
     @Override
-    public WorldElement objectAt(Vector2d position) {
-        return animalMap.get(position);
-    }
-
-    @Override
     public boolean canMoveTo(Vector2d position) {
         return !isOccupied(position) &&
                 position.follows(mapBounds.lowerLeft()) &&
