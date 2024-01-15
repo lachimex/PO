@@ -26,4 +26,5 @@ public interface MapInterface {
     Animal figureOutEatingConflict(Vector2d position);
     int getWidthOfGreenArea();
     int getStartingRowOfGreenArea();
+    boolean canSimRunAgain();
 }

@@ -193,7 +193,7 @@ public class DarwinPresenter {
             }
             if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
                 vBox.setStyle("-fx-background-color: rgb(0,0,0)");
-            } else {
+            } else if (!paused){
                 vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
             }
             mapGrid.add(vBox, position.getX() + 1, globalSettings.mapHeight() - position.getY());
@@ -287,6 +287,9 @@ public class DarwinPresenter {
     public void startTheSim(){
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.1), event -> {
+                    if (!map.canSimRunAgain()){
+                        timeline.stop();
+                    }
                     if (!paused){
                         dayLabel.setText(Integer.toString(dayCounter));
                         map.setCurrentDay(dayCounter);
@@ -300,9 +303,6 @@ public class DarwinPresenter {
                         if (savingToFile){
                             saveDataToFile();
                         }
-                    }
-                    if (map.getAnimalNumber() == 0){
-                        timeline.stop();
                     }
                 })
         );

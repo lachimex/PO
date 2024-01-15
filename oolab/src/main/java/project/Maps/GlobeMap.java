@@ -60,9 +60,7 @@ public class GlobeMap extends AbstractMap implements MapInterface{
 
     @Override
     public void growPlants() {
-        for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
-            super.growPlant();
-        }
+        super.growNPlants(globalSettings.numberOfPlantsEachDay());
     }
 
 }

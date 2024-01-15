@@ -8,7 +8,6 @@ import java.util.*;
 
 public class TunnelsMap extends AbstractMap implements MapInterface{
 
-    Random random = new Random();
     private Map<Vector2d, Vector2d> tunnelMap = new HashMap<>();
 
     public TunnelsMap(GlobalSettings globalSettings) {
@@ -70,11 +69,8 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
 
     @Override
     public void growPlants() {
-        for (int i = 0; i < globalSettings.numberOfPlantsEachDay(); i++){
-            super.growPlant();
-        }
+        super.growNPlants(globalSettings.numberOfPlantsEachDay());
     }
-
 
     public Map<Vector2d, Vector2d> getTunnelMap(){
         return tunnelMap;
