@@ -5,6 +5,7 @@ import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
 import project.Maps.MapDirection;
 import project.Maps.Vector2d;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -27,6 +28,7 @@ public class Animal implements MapElement {
     private int bornDay;
 
     private boolean ifTracked;
+
     public Animal(List<Integer> genList, Vector2d position, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
         this.globalSettings = globalSettings;
@@ -36,52 +38,47 @@ public class Animal implements MapElement {
         this.plantEatenCounter = 0;
         this.age = 0;
         this.alive = true;
-        for (int gen : genList){
-            if (gen < 0 || gen > 7){
+        for (int gen : genList) {
+            if (gen < 0 || gen > 7) {
                 throw new IllegalArgumentException("gen does not exist in genom type");
             }
         }
-        if (genList.isEmpty()){
+        if (genList.isEmpty()) {
             throw new IllegalArgumentException("gen list cannot be empty");
-        }
-        else{
+        } else {
             this.activeGen = genList.get(random.nextInt(genList.size()));
             this.direction = MapDirection.intToMapDirection(activeGen);
         }
     }
 
-    public void eat(){
+    public void eat() {
         energy += globalSettings.energyGainOnEat();
         plantEatenCounter++;
     }
 
-    public Animal produce(Animal secondParent, int currentDay){
+    public Animal produce(Animal secondParent, int currentDay) {
         int side = random.nextInt(2); //side of gens from stronger animal 0: left 1: right
         Animal strongerAnimal;
         Animal weakerAnimal;
         int indexOfCrossingGens;
-        if (this.energy < globalSettings.energyNeededToReproduce() || secondParent.getEnergy() < globalSettings.energyNeededToReproduce()){
+        if (this.energy < globalSettings.energyNeededToReproduce() || secondParent.getEnergy() < globalSettings.energyNeededToReproduce()) {
             return null;
-        }
-        else{
+        } else {
             int sumParentEnergy = this.getEnergy() + secondParent.getEnergy();
-            if (secondParent.getEnergy() >= this.getEnergy()){
+            if (secondParent.getEnergy() >= this.getEnergy()) {
                 strongerAnimal = secondParent; //second parent is stronger than this
                 weakerAnimal = this;
-                if (side == 0){ //leftside of stronger animal
+                if (side == 0) { //leftside of stronger animal
                     indexOfCrossingGens = (int) genList.size() * secondParent.getEnergy() / sumParentEnergy;
-                }
-                else{
+                } else {
                     indexOfCrossingGens = (int) genList.size() * (1 - secondParent.getEnergy() / sumParentEnergy);
                 }
-            }
-            else{
+            } else {
                 strongerAnimal = this; //this animal is stronger than second parent
                 weakerAnimal = secondParent;
-                if (side == 0){ //leftside of stronger animal
+                if (side == 0) { //leftside of stronger animal
                     indexOfCrossingGens = (int) genList.size() * this.getEnergy() / sumParentEnergy;
-                }
-                else{
+                } else {
                     indexOfCrossingGens = (int) genList.size() * (1 - this.getEnergy() / sumParentEnergy);
                 }
             }
@@ -91,11 +88,10 @@ public class Animal implements MapElement {
         this.childCounter += 1;
         secondParent.childCounter += 1;
         List<Integer> gensOfChild = new ArrayList<>();
-        if (side == 0){
+        if (side == 0) {
             gensOfChild.addAll(strongerAnimal.genList.subList(0, indexOfCrossingGens));
             gensOfChild.addAll(weakerAnimal.genList.subList(indexOfCrossingGens, weakerAnimal.genList.size()));
-        }
-        else{
+        } else {
             gensOfChild.addAll(weakerAnimal.genList.subList(0, indexOfCrossingGens));
             gensOfChild.addAll(strongerAnimal.genList.subList(indexOfCrossingGens, weakerAnimal.genList.size()));
         }
@@ -107,59 +103,49 @@ public class Animal implements MapElement {
         return child;
     }
 
-    public void move(){
+    public void move() {
         direction = MapDirection.intToMapDirection(
                 genList.get(activeGen % genList.size()));
         position = position.add(direction.toUnitVector());
-        if (globalSettings.behaviourVariant().equals(BehaviourVariant.LITTLE_BIT_OF_CRAZINESS)){
-            if (random.nextInt(5) == 4){
+        if (globalSettings.behaviourVariant().equals(BehaviourVariant.LITTLE_BIT_OF_CRAZINESS)) {
+            if (random.nextInt(5) == 4) {
                 activeGen += random.nextInt(genList.size());
-            }
-            else{
+            } else {
                 activeGen++;
             }
-        }
-        else{
+        } else {
             activeGen++;
         }
         energy--;
     }
 
-    public int getEnergy(){
-        return this.energy;
-    }
-
-    public int getDescendants(){
+    public int getDescendants() {
         int descendants_number = 0;
-        if (descendantList.isEmpty()){
+        if (descendantList.isEmpty()) {
             return descendants_number;
         }
-        for (Animal descendant : descendantList){
+        for (Animal descendant : descendantList) {
             descendants_number += 1 + descendant.getDescendants();
         }
         return descendants_number;
-    }
-
-    void addDescendant(Animal descendant){
-        descendantList.add(descendant);
     }
 
     public void setEnergy(int energy) {
         this.energy = energy;
     }
 
-    private void mutate(GlobalSettings globalSettings){
-        int numberOfMutations = random.nextInt(globalSettings.minimalNumberOfMutations(), globalSettings.maximumNumberOfMutations());
-        for (int i = 0; i < numberOfMutations; i++){
+    private void mutate(GlobalSettings globalSettings) {
+        int numberOfMutations = random.nextInt(globalSettings.minimalNumberOfMutations(), globalSettings.maximumNumberOfMutations() + 1);
+        for (int i = 0; i < numberOfMutations; i++) {
             int indexOfMutation = random.nextInt(globalSettings.genomLength());
             int toWhatGen = random.nextInt(8);
             this.genList.set(indexOfMutation, toWhatGen);
         }
     }
 
-    public static List<Integer> generateRandomGenList(int numberOfGens){
+    public static List<Integer> generateRandomGenList(int numberOfGens) {
         List<Integer> out = new ArrayList<>();
-        for (int i = 0; i < numberOfGens; i++){
+        for (int i = 0; i < numberOfGens; i++) {
             out.add(random.nextInt(8));
         }
         return out;
@@ -168,6 +154,10 @@ public class Animal implements MapElement {
     @Override
     public Vector2d getPosition() {
         return position;
+    }
+
+    public int getEnergy() {
+        return this.energy;
     }
 
     public void setDayOfDeath(int dayOfDeath) {
@@ -197,15 +187,16 @@ public class Animal implements MapElement {
     public void setDirection(MapDirection direction) {
         this.direction = direction;
     }
+
     public int getDayOfDeath() throws AnimalNotDeadYetException {
-        if (dayOfDeath == null){
+        if (dayOfDeath == null) {
             throw new AnimalNotDeadYetException(this);
         }
         return dayOfDeath;
     }
 
     public int getLifeSpan() throws AnimalNotDeadYetException {
-        if (lifeSpan == null){
+        if (lifeSpan == null) {
             throw new AnimalNotDeadYetException(this);
         }
         return lifeSpan;
@@ -218,9 +209,12 @@ public class Animal implements MapElement {
     public MapDirection getDirection() {
         return direction;
     }
-    public List<Integer> getGenList() { return genList;}
 
-    public int getActiveGen(){
+    public List<Integer> getGenList() {
+        return genList;
+    }
+
+    public int getActiveGen() {
         return activeGen;
     }
 
