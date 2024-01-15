@@ -13,8 +13,6 @@
                     <Insets left="100.0" />
                 </BorderPane.margin>
             </Label>
-            <Button fx:id="showAnimalsWithGen" onAction="#handleAnimalsWithMostPopularGen" text="Pokaz dominujacy gen"/>
-            <Button fx:id="showPreferredFields" onAction="#handlePreferredFields" text="Pokaz pola preferowane przez rosliny"/>
         </VBox>
     </left>
 

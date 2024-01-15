@@ -14,6 +14,7 @@ import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.effect.ColorAdjust;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -48,29 +49,23 @@ public class DarwinPresenter {
     private Label info;
     @FXML
     private Label animalSpecificInfo;
-    @FXML
-    private Button showAnimalsWithGen;
-    boolean ifAnimalsWithGenShowing = false;
-    @FXML
-    private Button showPreferredFields;
-    boolean ifPreferredFieldsShowing = false;
     private Timeline timeline;
     Animal trackedAnimal;
     boolean savingToFile = false;
     int numOfSim;
 
-    public void handlePauseResumeRequest(){
-        if (paused){
+    public void handlePauseResumeRequest() {
+        if (paused) {
             pauseResumeButton.setText("pauza");
             paused = false;
-        }
-        else{
+        } else {
             pauseResumeButton.setText("wznow");
             paused = true;
         }
+        Platform.runLater(this::drawMap);
     }
 
-    private void displayInfo(){
+    private void displayInfo() {
         info.setText("Animals: " + map.getAnimalNumber()
                 + "\nPlants: " + map.getPlantNumber()
                 + "\nFree fields: " + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size())
@@ -96,7 +91,7 @@ public class DarwinPresenter {
     public void drawMap() {
         clearGrid();
         displayInfo();
-        if (trackedAnimal != null){
+        if (trackedAnimal != null) {
             animalInfo(trackedAnimal);
         }
         mapGrid.setAlignment(Pos.CENTER);
@@ -127,7 +122,16 @@ public class DarwinPresenter {
             GridPane.setHalignment(label, HPos.CENTER);
             mapGrid.add(label, 0, rows - i);
         }
-
+        if (paused) {
+            for (int i = map.getStartingRowOfGreenArea(); i < map.getStartingRowOfGreenArea() + map.getWidthOfGreenArea(); i++) {
+                for (int j = 0; j < globalSettings.mapWidth(); j++) {
+                    Rectangle rectangle = new Rectangle(cellSize, cellSize);
+                    rectangle.setFill(Color.web("#95e095"));
+                    rectangle.setMouseTransparent(true);
+                    mapGrid.add(rectangle, j + 1, i);
+                }
+            }
+        }
         Map<Vector2d, List<Animal>> animalsMap = map.getAnimalsMap();
         Map<Vector2d, Plant> plantMap = map.getPlantMap();
         int maxDisplayedEnergy = globalSettings.initialEnergy() * 3;
@@ -148,10 +152,9 @@ public class DarwinPresenter {
             occupiedPlacesSet.add(position);
             Circle animalCell = new Circle();
             Animal strongestAnimal;
-            if (animals.size() > 1){
+            if (animals.size() > 1) {
                 strongestAnimal = map.figureOutEatingConflict(animals.get(0).getPosition());
-            }
-            else{
+            } else {
                 strongestAnimal = animals.get(0);
             }
             VBox vBox = new VBox(animalCell);
@@ -160,44 +163,47 @@ public class DarwinPresenter {
             vBox.setAlignment(Pos.CENTER);
             GridPane.setHalignment(vBox, HPos.CENTER);
             GridPane.setValignment(vBox, VPos.CENTER);
-            Rectangle invRect = new Rectangle(20, 20, Color.TRANSPARENT);
+            Rectangle invRect = new Rectangle(cellSize, cellSize, Color.TRANSPARENT);
             invRect.setMouseTransparent(false);
+            invRect.setFocusTraversable(true);
             vBox.setMouseTransparent(true);
             invRect.setOnMouseEntered(e -> {
-                if (paused){
+                if (paused) {
                     invRect.setCursor(Cursor.HAND);
                 }
             });
-            invRect.setOnMouseExited(e -> {invRect.setCursor(Cursor.DEFAULT);});
+            invRect.setOnMouseExited(e -> {
+                invRect.setCursor(Cursor.DEFAULT);
+            });
             invRect.setOnMouseClicked(event -> {
-                if (paused){
-                    if (trackedAnimal != null){
+                if (paused) {
+                    if (trackedAnimal != null) {
                         trackedAnimal.setIfTracked(false);
                     }
                     strongestAnimal.setIfTracked(true);
                     trackedAnimal = strongestAnimal;
                     animalInfo(trackedAnimal);
+                    Platform.runLater(this::drawMap);
                 }
             });
             double rgbScalar = 255 * (1 - (Math.min((double) strongestAnimal.getEnergy() / maxDisplayedEnergy, 1)));
-            if (ifAnimalsWithGenShowing){
-                if (strongestAnimal.getGenList().toString().equals(map.getMostPopularGenotype())){
+            if (paused) {
+                if (strongestAnimal.getGenList().toString().equals(map.getMostPopularGenotype())) {
                     vBox.setStyle("-fx-background-color: rgb(135,24,197)");
+                } else {
+                    vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
                 }
-                else{
-                    vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar  + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
-                }
-            } else if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
-                vBox.setStyle("-fx-background-color: rgb(28,140,135)");
             }
-            else{
-                vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar  + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
+            if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
+                vBox.setStyle("-fx-background-color: rgb(0,0,0)");
+            } else {
+                vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
             }
-
-            mapGrid.add(vBox,position.getX() + 1, globalSettings.mapHeight() - position.getY());
+            mapGrid.add(vBox, position.getX() + 1, globalSettings.mapHeight() - position.getY());
             mapGrid.add(invRect, position.getX() + 1, globalSettings.mapHeight() - position.getY());
         });
-        if (globalSettings.mapVariant().equals(MapVariant.UNDERGROUND_TUNNELS)){
+
+        if (globalSettings.mapVariant().equals(MapVariant.UNDERGROUND_TUNNELS)) {
             Map<Vector2d, Vector2d> tunnelsMap = ((TunnelsMap) map).getTunnelMap();
             tunnelsMap.forEach((entry, exit) -> {
                 Label tunnelCell1 = new Label();
@@ -214,27 +220,27 @@ public class DarwinPresenter {
         }
     }
 
-    public void animalInfo(Animal animal){
+    public void animalInfo(Animal animal) {
         String daysOfLivingInfo;
         String dayOfDeathInfo;
-        try{
+        try {
             daysOfLivingInfo = "Days of living: " + animal.getLifeSpan() + "\n";
-        } catch(AnimalNotDeadYetException e){
+        } catch (AnimalNotDeadYetException e) {
             daysOfLivingInfo = "";
         }
-        try{
+        try {
             dayOfDeathInfo = "Day of death: " + animal.getDayOfDeath() + "\n";
-        } catch (AnimalNotDeadYetException e){
+        } catch (AnimalNotDeadYetException e) {
             dayOfDeathInfo = "";
         }
         animalSpecificInfo.setText(
                 "Genom: " + animal.getGenList() + "\n" +
-                "Active Gen: " + animal.getActiveGen() + "\n" +
-                "Energy: " + animal.getEnergy() + "\n" +
-                "Plants Eaten: " + animal.getPlantEatenCounter() + "\n" +
-                "Children: " + animal.getChildCounter() + "\n" +
-                "Descendants: " + animal.getDescendants() + "\n" +
-                daysOfLivingInfo + dayOfDeathInfo
+                        "Active Gen: " + animal.getActiveGen() + "\n" +
+                        "Energy: " + animal.getEnergy() + "\n" +
+                        "Plants Eaten: " + animal.getPlantEatenCounter() + "\n" +
+                        "Children: " + animal.getChildCounter() + "\n" +
+                        "Descendants: " + animal.getDescendants() + "\n" +
+                        daysOfLivingInfo + dayOfDeathInfo
 
         );
     }
@@ -247,7 +253,7 @@ public class DarwinPresenter {
         this.numOfSim = numOfSim;
     }
 
-    public void enableSavingToCSV(){
+    public void enableSavingToCSV() {
         savingToFile = true;
         Path filePath = Path.of("data_from_map" + numOfSim + ".csv");
         try {
@@ -258,48 +264,27 @@ public class DarwinPresenter {
     }
 
 
-    private void saveDataToFile(){
+    private void saveDataToFile() {
         Path filePath = Path.of("data_from_map" + numOfSim + ".csv");
         try {
-            if (Files.size(filePath) == 0){ //it procedes when file exists but it is empty
+            if (Files.size(filePath) == 0) { //it procedes when file exists but it is empty
                 try (FileWriter out = new FileWriter(String.valueOf(filePath), true)) {
                     out.write("Animals, Plants, Free fields, Average energy, Most popular genotype, Average Lifespan\n");
-                } catch (IOException e){
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-            }
-            else{
+            } else {
                 try (FileWriter out = new FileWriter(String.valueOf(filePath), true)) {
                     out.write(map.getAnimalNumber() + ", " + map.getPlantNumber() + ", "
                             + (globalSettings.mapHeight() * globalSettings.mapWidth() - occupiedPlacesSet.size()) + ", "
                             + map.getAverageEnergy() + ", " + map.getAverageLifeSpan() + "\n");
-                } catch (IOException e){
+                } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
             }
         } catch (IOException e) { //it catches when file doesnt exist
             e.printStackTrace();
         }
-    }
-
-    public void handleAnimalsWithMostPopularGen(){
-        if (!ifAnimalsWithGenShowing){
-            showAnimalsWithGen.setText("Ukryj zwierzeta z najpopularniejszym genem");
-        } else{
-            showAnimalsWithGen.setText("Pokaz zwierzeta z najpopularniejszym genem");
-        }
-        ifAnimalsWithGenShowing = !ifAnimalsWithGenShowing;
-        drawMap();
-    }
-
-    public void handlePreferredFields(){
-        if (ifPreferredFieldsShowing){
-            showPreferredFields.setText("Ukryj pola preferowane przez rosliny");
-        } else{
-            showPreferredFields.setText("Ukryj pola preferowane przez rosliny");
-        }
-        ifPreferredFieldsShowing = !ifPreferredFieldsShowing;
-        drawMap();
     }
 
     public void startTheSim(){

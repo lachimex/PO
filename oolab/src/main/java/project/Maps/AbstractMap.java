@@ -11,6 +11,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public abstract class AbstractMap {
     protected final GlobalSettings globalSettings;
     protected int currentDay;
+    protected int widthOfGreenArea;
+    protected int startingRow;
 
 
     Map<Vector2d, List<Animal>> animalsMap = new HashMap<>();
@@ -21,6 +23,18 @@ public abstract class AbstractMap {
     public AbstractMap(GlobalSettings globalSettings) {
         this.globalSettings = globalSettings;
         currentDay = 1;
+
+        if (globalSettings.mapHeight() % 2 == 0){
+            this.widthOfGreenArea = globalSettings.mapWidth() / 5 + 1;
+            this.startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
+        }
+        else{
+            this.widthOfGreenArea = globalSettings.mapWidth() / 5;
+            if (widthOfGreenArea == 0){
+                widthOfGreenArea = 1;
+            }
+            this.startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
+        }
     }
 
     public void addAnimal(Vector2d position, Animal animal){
@@ -142,19 +156,6 @@ public abstract class AbstractMap {
         }
     }
     protected void growPlant(){
-        int widthOfGreenArea;
-        int startingRow;
-        if (globalSettings.mapHeight() % 2 == 0){
-            widthOfGreenArea = globalSettings.mapWidth() / 5 + 1;
-            startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
-        }
-        else{
-            widthOfGreenArea = globalSettings.mapWidth() / 5;
-            if (widthOfGreenArea == 0){
-                widthOfGreenArea = 1;
-            }
-            startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
-        }
         int x = random.nextInt(globalSettings.mapWidth());
         int y;
         int n = random.nextInt(5);
@@ -236,5 +237,11 @@ public abstract class AbstractMap {
 
     public int getCurrentDay(){
         return currentDay;
+    }
+    public int getWidthOfGreenArea(){
+        return widthOfGreenArea;
+    }
+    public int getStartingRowOfGreenArea(){
+        return startingRow;
     }
 }

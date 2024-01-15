@@ -23,4 +23,6 @@ public interface MapInterface {
     int getAverageLifeSpan();
     void setCurrentDay(int dayCounter);
     Animal figureOutEatingConflict(Vector2d position);
+    int getWidthOfGreenArea();
+    int getStartingRowOfGreenArea();
 }
