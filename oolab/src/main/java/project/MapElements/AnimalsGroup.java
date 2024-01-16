@@ -34,7 +34,7 @@ public class AnimalsGroup {
 
     public Animal figureOutEatingConflict(){
         if (getSize() > 1){
-            animalList.sort(Comparator.comparingInt(Animal::getEnergy));
+            animalList.sort(Comparator.comparingInt(Animal::getEnergy).reversed());
             List<Animal> animalsWithMostEnergy = new ArrayList<>(animalList.subList(0, 2));
             Animal animal1 = animalsWithMostEnergy.get(0);
             Animal animal2 = animalsWithMostEnergy.get(1);
