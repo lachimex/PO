@@ -29,18 +29,18 @@ public abstract class AbstractMap {
         currentDay = 1;
 
         if (globalSettings.mapHeight() % 2 == 0) {
-            this.widthOfGreenArea = globalSettings.mapWidth() / 5 + 1;
-            this.startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
+            this.widthOfGreenArea = globalSettings.mapHeight() / 5 + 1;
+            this.startingRow = globalSettings.mapHeight() / 2 - widthOfGreenArea / 2;
         } else {
-            this.widthOfGreenArea = globalSettings.mapWidth() / 5;
+            this.widthOfGreenArea = globalSettings.mapHeight() / 5;
             if (widthOfGreenArea == 0) {
                 widthOfGreenArea = 1;
             }
-            this.startingRow = globalSettings.mapWidth() / 2 - widthOfGreenArea / 2;
+            this.startingRow = globalSettings.mapHeight() / 2 - widthOfGreenArea / 2;
         }
         for (int i = 0; i < globalSettings.mapHeight(); i++) {
             for (int j = 0; j < globalSettings.mapWidth(); j++) {
-                fieldsSet.add(new Vector2d(i, j));
+                fieldsSet.add(new Vector2d(j, i));
             }
         }
     }
@@ -131,7 +131,7 @@ public abstract class AbstractMap {
         });
         for (int i = 0; i < n; i++) {
             Vector2d plantVector = randomPlantVector(emptyFieldsOutsideJungle, emptyFieldsInJungle);
-            plantMap.put(plantVector, new Plant());
+            plantMap.put(plantVector, new Plant(plantVector));
         }
     }
 
@@ -173,6 +173,17 @@ public abstract class AbstractMap {
             counter.addAndGet(animalsGroup.getSize());
         });
         return counter.get();
+    }
+
+    public int getDescendantsFromAnimal(Animal animal, Set<Animal> controlSet){
+        int out = 0;
+        controlSet.add(animal);
+        for (Animal child : animal.getChildList()){
+            if (!controlSet.contains(child)){
+                out +=  1 + getDescendantsFromAnimal(child, controlSet);
+            }
+        }
+        return out;
     }
 
     public void setCurrentDay(int currentDay) {

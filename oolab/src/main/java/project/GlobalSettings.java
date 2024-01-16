@@ -16,6 +16,6 @@ public record GlobalSettings(
         int minimalNumberOfMutations,
         int maximumNumberOfMutations,
         BehaviourVariant behaviourVariant, //complete predestination and little bit of craziness
-        int genomLength
-
+        int genomLength,
+        boolean savingToFile
 ) { }

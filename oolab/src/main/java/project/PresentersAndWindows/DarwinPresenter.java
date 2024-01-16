@@ -236,7 +236,8 @@ public class DarwinPresenter {
                         "Energy: " + animal.getEnergy() + "\n" +
                         "Plants Eaten: " + animal.getPlantEatenCounter() + "\n" +
                         "Children: " + animal.getChildCounter() + "\n" +
-                        "Descendants: " + animal.getDescendants() + "\n" +
+                        "Descendants: " + map.getDescendantsFromAnimal(animal, new HashSet<>()) + "\n" +
+                        "Born day:" + animal.getBornDay() + "\n" +
                         daysOfLivingInfo + dayOfDeathInfo
 
         );
@@ -309,7 +310,6 @@ public class DarwinPresenter {
         timeline.setCycleCount(Animation.INDEFINITE); // Run indefinitely
         timeline.play();
        }
-
 
 }
 

@@ -13,12 +13,15 @@ import project.Maps.GlobeMap;
 import project.Maps.MapVariant;
 import project.Maps.TunnelsMap;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 
 public class SettingsPresenter {
 
@@ -61,7 +64,7 @@ public class SettingsPresenter {
     @FXML
     private ChoiceBox<BehaviourVariant> mutationVariant;
     @FXML
-    private ChoiceBox<String> savingToFile;
+    private ChoiceBox<Boolean> savingToFile;
 
     @FXML
     private TextField genomLength;
@@ -73,14 +76,15 @@ public class SettingsPresenter {
     private DarwinWindow darwinWindow;
     private int numOfSim = 1;
     private List<String> filenames = new ArrayList<>();
+    private GlobalSettings globalSettings;
 
     private List<String> listFilesForFolder(final File folder) {
         System.out.println(folder.isDirectory());
-        if (folder.listFiles() == null){
+        if (folder.listFiles() == null) {
             return filenames;
         }
         for (File file : folder.listFiles()) {
-            if(file.getName().contains(".csv")){
+            if (file.getName().contains(".csv")) {
                 filenames.add(file.getName());
             }
         }
@@ -88,7 +92,7 @@ public class SettingsPresenter {
     }
 
     @FXML
-    private void initialize(){
+    private void initialize() {
         ObservableList<MapVariant> mapVariants = FXCollections.observableArrayList(
                 MapVariant.GLOBE,
                 MapVariant.UNDERGROUND_TUNNELS
@@ -101,23 +105,22 @@ public class SettingsPresenter {
         );
         mutationVariant.setItems(mutationVariants);
         mutationVariant.setValue(BehaviourVariant.COMPLETE_PREDESTINATION);
-        ObservableList<String> savingToFileVariants = FXCollections.observableArrayList(
-                "yes",
-                "no"
+        ObservableList<Boolean> savingToFileVariants = FXCollections.observableArrayList(
+                true,
+                false
         );
         savingToFile.setItems(savingToFileVariants);
-        savingToFile.setValue("no");
+        savingToFile.setValue(false);
         String basePath = new File("").getAbsolutePath();
         System.out.println(basePath);
-        List<String> filesList = listFilesForFolder(new File("/SettingsFiles/"));
+        List<String> filesList = listFilesForFolder(new File("csv_files/"));
         ObservableList<String> settingsFiles = FXCollections.observableArrayList("brak");
         settingsFiles.addAll(filesList);
         variantFromFile.setItems(settingsFiles);
         variantFromFile.setValue("brak");
     }
 
-    public void startTheSim() throws IOException, InterruptedException {
-        GlobalSettings globalSettings;
+    private boolean parseSettings() {
         if (checkExistenceOfAllValues()) {
             globalSettings = new GlobalSettings(
                     Integer.parseInt(mapHeight.getText().replaceAll("\\s", "")),
@@ -133,29 +136,24 @@ public class SettingsPresenter {
                     Integer.parseInt(minMutations.getText().replaceAll("\\s", "")),
                     Integer.parseInt(maxMutations.getText().replaceAll("\\s", "")),
                     mutationVariant.getValue(),
-                    Integer.parseInt(genomLength.getText().replaceAll("\\s", ""))
+                    Integer.parseInt(genomLength.getText().replaceAll("\\s", "")),
+                    savingToFile.getValue()
             );
-            if (checkSettings(globalSettings)){
-                    errorInfo.setText("wszystko gra, startujemy z symulacja");
-                    darwinWindow = new DarwinWindow(globalSettings);
-                    darwinWindow.start(new Stage());
-                    if (globalSettings.mapVariant().equals(MapVariant.GLOBE)){
-                        GlobeMap globeMap = new GlobeMap(globalSettings);
-                        globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
-                        darwinWindow.getPresenter().setMap(globeMap);
-                    } else{
-                        TunnelsMap tunnelsMap = new TunnelsMap(globalSettings);
-                        tunnelsMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
-                        darwinWindow.getPresenter().setMap(tunnelsMap);
-                    }
-                    darwinWindow.getPresenter().setNumOfSim(numOfSim++);
-                    if (savingToFile.getValue().equals("yes")){
-                        darwinWindow.getPresenter().enableSavingToCSV();
-                    }
-                    darwinWindow.getPresenter().startTheSim();
-                }
+        }
+        return checkSettings(globalSettings);
+    }
+
+    public void startTheSim() throws IOException {
+        if (parseSettings()) {
+            if (!variantFromFile.getValue().equals("brak")){
+                startTheSimFromCSVFile();
+            }
+            else{
+                startTheSimFromGlobalSettings(globalSettings);
+            }
         }
     }
+
     boolean checkSettings(GlobalSettings settings) {
         if (settings.mapHeight() <= 0) {
             mapHeight.setStyle("-fx-border-color: red; -fx-max-width: 250;");
@@ -197,12 +195,11 @@ public class SettingsPresenter {
             initEnergy.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
-        if (settings.numberOfPlantsEachDay() <= 0){
+        if (settings.numberOfPlantsEachDay() <= 0) {
             numOfPlantsEachDay.setStyle("-fx-border-color: red; -fx-max-width: 250");
             errorInfo.setText("Ilosc roslin rosnacych kazdego dnia musi byc wieksza od 0");
             return false;
-        }
-        else{
+        } else {
             numOfPlantsEachDay.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
@@ -254,27 +251,25 @@ public class SettingsPresenter {
             genomLength.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
-        if (mapVariant.getValue() == null){
+        if (mapVariant.getValue() == null) {
             mapVariant.setStyle("-fx-border-color: red; -fx-max-width: 250");
             errorInfo.setText("Wybierz wariant mapy");
             return false;
-        }
-        else{
+        } else {
             mapVariant.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
 
-        if (mutationVariant.getValue() == null){
+        if (mutationVariant.getValue() == null) {
             mapVariant.setStyle("-fx-border-color: red; -fx-max-width: 250");
             errorInfo.setText("Wybierz wariant mutacji");
             return false;
-        }
-        else{
+        } else {
             mutationVariant.setStyle("-fx-border-color: grey; -fx-max-width: 250");
         }
         return true;
     }
 
-    boolean checkExistenceOfAllValues() {
+    private boolean checkExistenceOfAllValues() {
         if (mapHeight.getText().isEmpty()
                 || mapWidth.getText().isEmpty()
                 || initNumOfPlants.getText().isEmpty()
@@ -295,4 +290,88 @@ public class SettingsPresenter {
         return true;
     }
 
+    @FXML
+    void saveCurrentValuesToFile() {
+        if (!parseSettings()){
+            return;
+        }
+            Path filePath = Path.of("csv_files/settings" + LocalTime.now().getHour() + LocalTime.now().getMinute() + LocalTime.now().getSecond() + ".csv");
+            try (FileWriter out = new FileWriter(String.valueOf(filePath))) {
+                out.write(
+                        "wysokosc,szerokosc,map_variant,init_plants,init_animals,init_animal_energy,plants_each_day,gain_after_plant,energy_needed_to_reproduce,energy_loss_after_reproduction,min_mutations,max_mutations,mutation_variant,gen_length,zapisywanie_do_pliku\n"
+                                + globalSettings.mapHeight() + ","
+                                + globalSettings.mapWidth() + ","
+                                + globalSettings.mapVariant() + ","
+                                + globalSettings.initialNumberOfPlants() + ","
+                                + globalSettings.initialNumberOfAnimals() + ","
+                                + globalSettings.initialEnergy() + ","
+                                + globalSettings.numberOfPlantsEachDay() + ","
+                                + globalSettings.energyGainOnEat() + ","
+                                + globalSettings.energyNeededToReproduce() + ","
+                                + globalSettings.energyLossDuringReproduction() + ","
+                                + globalSettings.minimalNumberOfMutations() + ","
+                                + globalSettings.maximumNumberOfMutations() + ","
+                                + globalSettings.behaviourVariant() + ","
+                                + globalSettings.genomLength() + ","
+                                + savingToFile.getValue()
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+    void startTheSimFromGlobalSettings(GlobalSettings globalSettings) throws IOException {
+        errorInfo.setText("wszystko gra, startujemy z symulacja");
+        darwinWindow = new DarwinWindow(globalSettings);
+        darwinWindow.start(new Stage());
+        if (globalSettings.mapVariant().equals(MapVariant.GLOBE)) {
+            GlobeMap globeMap = new GlobeMap(globalSettings);
+            globeMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+            darwinWindow.getPresenter().setMap(globeMap);
+        } else {
+            TunnelsMap tunnelsMap = new TunnelsMap(globalSettings);
+            tunnelsMap.prepareMap(globalSettings.initialNumberOfAnimals(), globalSettings.initialNumberOfPlants());
+            darwinWindow.getPresenter().setMap(tunnelsMap);
+        }
+        darwinWindow.getPresenter().setNumOfSim(numOfSim++);
+        if (savingToFile.getValue()) {
+            darwinWindow.getPresenter().enableSavingToCSV();
+        }
+        darwinWindow.getPresenter().startTheSim();
+    }
+
+    void startTheSimFromCSVFile() {
+        String filePath = "csv_files/" + variantFromFile.getValue();
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String[] columnTitles = reader.readLine().split(",");
+            String[] values = reader.readLine().split(",");
+
+            Map<String, String> dataMap = new HashMap<>();
+            for (int i = 0; i < columnTitles.length; i++) {
+                dataMap.put(columnTitles[i], values[i]);
+            }
+            GlobalSettings fileSettings = new GlobalSettings(
+                    Integer.parseInt(dataMap.get("wysokosc")),
+                    Integer.parseInt(dataMap.get("szerokosc")),
+                    MapVariant.valueOf(dataMap.get("map_variant")),
+                    Integer.parseInt(dataMap.get("init_plants")),
+                    Integer.parseInt(dataMap.get("init_animals")),
+                    Integer.parseInt(dataMap.get("init_animal_energy")),
+                    Integer.parseInt(dataMap.get("plants_each_day")),
+                    Integer.parseInt(dataMap.get("gain_after_plant")),
+                    Integer.parseInt(dataMap.get("energy_needed_to_reproduce")),
+                    Integer.parseInt(dataMap.get("energy_loss_after_reproduction")),
+                    Integer.parseInt(dataMap.get("min_mutations")),
+                    Integer.parseInt(dataMap.get("max_mutations")),
+                    BehaviourVariant.valueOf(dataMap.get("mutation_variant")),
+                    Integer.parseInt(dataMap.get("gen_length")),
+                    Boolean.parseBoolean(dataMap.get("zapisywanie_do_pliku"))
+            );
+        startTheSimFromGlobalSettings(fileSettings);
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

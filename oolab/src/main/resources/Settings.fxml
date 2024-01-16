@@ -9,6 +9,9 @@
     <top>
         <Label fx:id="errorInfo" BorderPane.alignment="CENTER" />
     </top>
+    <left>
+        <Button onAction="#saveCurrentValuesToFile">zapisz konfiguracje</Button>
+    </left>
     <center>
         <VBox alignment="CENTER">
 

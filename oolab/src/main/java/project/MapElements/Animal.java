@@ -183,6 +183,10 @@ public class Animal implements MapElement {
         return childCounter;
     }
 
+    public List<Animal> getChildList(){
+        return childList;
+    }
+
     public void setPosition(Vector2d position) {
         this.position = position;
     }
@@ -231,5 +235,10 @@ public class Animal implements MapElement {
 
     public void setIfTracked(boolean ifTracked) {
         this.ifTracked = ifTracked;
+    }
+
+    @Override
+    public String toString(){
+        return position.toString() + " " + direction.toString();
     }
 }
