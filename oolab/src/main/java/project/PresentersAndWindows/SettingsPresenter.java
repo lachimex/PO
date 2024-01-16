@@ -13,7 +13,12 @@ import project.Maps.GlobeMap;
 import project.Maps.MapVariant;
 import project.Maps.TunnelsMap;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
 
 public class SettingsPresenter {
 
@@ -62,9 +67,24 @@ public class SettingsPresenter {
     private TextField genomLength;
     @FXML
     private Label errorInfo;
+    @FXML
+    private ChoiceBox<String> variantFromFile;
 
     private DarwinWindow darwinWindow;
     private int numOfSim = 1;
+    private List<String> filenames = new ArrayList<>();
+
+    private List<String> listFilesForFolder(final File folder) {
+        if (folder.listFiles() == null){
+            return filenames;
+        }
+        for (File file : folder.listFiles()) {
+            if(file.getName().contains(".csv")){
+                filenames.add(file.getName());
+            }
+        }
+        return filenames;
+    }
 
     @FXML
     private void initialize(){
@@ -86,6 +106,13 @@ public class SettingsPresenter {
         );
         savingToFile.setItems(savingToFileVariants);
         savingToFile.setValue("no");
+        String basePath = new File("").getAbsolutePath();
+        System.out.println(basePath);
+        List<String> filesList = listFilesForFolder(new File("..\\SettingsFiles"));
+        ObservableList<String> settingsFiles = FXCollections.observableArrayList("brak");
+        settingsFiles.addAll(filesList);
+        variantFromFile.setItems(settingsFiles);
+        variantFromFile.setValue("brak");
     }
 
     public void startTheSim() throws IOException, InterruptedException {

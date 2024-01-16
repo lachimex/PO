@@ -12,7 +12,7 @@ import java.util.Random;
 public class Animal implements MapElement {
     GlobalSettings globalSettings;
     private List<Integer> genList;
-    private List<Animal> descendantList = new ArrayList<>();
+    private List<Animal> childList = new ArrayList<>();
     private static Random random = new Random();
     private MapDirection direction;
     private Vector2d position;
@@ -101,8 +101,8 @@ public class Animal implements MapElement {
         }
         Animal child = new Animal(gensOfChild, this.position, globalSettings.energyLossDuringReproduction() * 2, globalSettings);
         child.mutate(globalSettings);
-        this.descendantList.add(child);
-        secondParent.descendantList.add(child);
+        this.addChild(child);
+        secondParent.addChild(child);
         child.setBornDay(currentDay);
         return child;
     }
@@ -131,17 +131,17 @@ public class Animal implements MapElement {
 
     public int getDescendants(){
         int descendants_number = 0;
-        if (descendantList.isEmpty()){
+        if (childList.isEmpty()){
             return descendants_number;
         }
-        for (Animal descendant : descendantList){
-            descendants_number += 1 + descendant.getDescendants();
+        for (Animal child : childList){
+            descendants_number += 1 + child.getDescendants();
         }
         return descendants_number;
     }
 
-    void addDescendant(Animal descendant){
-        descendantList.add(descendant);
+    void addChild(Animal descendant){
+        childList.add(descendant);
     }
 
     public void setEnergy(int energy) {

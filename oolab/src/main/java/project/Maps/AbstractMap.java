@@ -135,19 +135,6 @@ public abstract class AbstractMap {
         }
     }
 
-    public boolean canSimRunAgain(){
-        if (animalsMap.isEmpty()){
-            return false;
-        }
-        if (emptyFieldsOutsideJungle.size() < globalSettings.numberOfPlantsEachDay()){
-            return false;
-        }
-        if (emptyFieldsInJungle.size() < globalSettings.numberOfPlantsEachDay()){
-            return false;
-        }
-        return true;
-    }
-
     public String getMostPopularGenotype() {
         Map<List<Integer>, Integer> genotypeMap = new HashMap<>();
         animalsMap.forEach((vector2d, animalsGroup) -> {

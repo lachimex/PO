@@ -287,7 +287,7 @@ public class DarwinPresenter {
     public void startTheSim(){
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.1), event -> {
-                    if (!map.canSimRunAgain()){
+                    if (map.getAnimalNumber() == 0){
                         timeline.stop();
                     }
                     if (!paused){

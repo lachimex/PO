@@ -86,6 +86,11 @@
                 <Label text="zapisywanie do pliku"/>
                 <ChoiceBox fx:id="savingToFile" style="-fx-max-width: 250;" />
             </VBox>
+
+            <VBox alignment="CENTER">
+                <Label text="wariant z pliku"/>
+                <ChoiceBox fx:id="variantFromFile" style="-fx-max-width: 250;" />
+            </VBox>
         </VBox>
     </center>
 
