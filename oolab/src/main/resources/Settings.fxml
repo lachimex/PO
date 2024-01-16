@@ -91,6 +91,7 @@
                 <Label text="wariant z pliku"/>
                 <ChoiceBox fx:id="variantFromFile" style="-fx-max-width: 250;" />
             </VBox>
+
         </VBox>
     </center>
 

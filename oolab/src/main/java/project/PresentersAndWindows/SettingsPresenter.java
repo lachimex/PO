@@ -75,6 +75,7 @@ public class SettingsPresenter {
     private List<String> filenames = new ArrayList<>();
 
     private List<String> listFilesForFolder(final File folder) {
+        System.out.println(folder.isDirectory());
         if (folder.listFiles() == null){
             return filenames;
         }
@@ -108,7 +109,7 @@ public class SettingsPresenter {
         savingToFile.setValue("no");
         String basePath = new File("").getAbsolutePath();
         System.out.println(basePath);
-        List<String> filesList = listFilesForFolder(new File("..\\SettingsFiles"));
+        List<String> filesList = listFilesForFolder(new File("/SettingsFiles/"));
         ObservableList<String> settingsFiles = FXCollections.observableArrayList("brak");
         settingsFiles.addAll(filesList);
         variantFromFile.setItems(settingsFiles);
