@@ -13,6 +13,7 @@ import javafx.geometry.VPos;
 import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
@@ -193,7 +194,7 @@ public class DarwinPresenter {
             }
             if (strongestAnimal == trackedAnimal) { //here I compare reference intentionally
                 vBox.setStyle("-fx-background-color: rgb(0,0,0)");
-            } else if (!paused){
+            } else if (!paused) {
                 vBox.setStyle("-fx-background-color: rgb(255, " + rgbScalar + ", 0)"); //closer to yellow -> less energy, closer to red -> more energy
             }
             mapGrid.add(vBox, position.getX() + 1, globalSettings.mapHeight() - position.getY());
@@ -217,7 +218,7 @@ public class DarwinPresenter {
         }
     }
 
-    public void animalInfo(Animal animal) {
+    private void animalInfo(Animal animal) {
         String daysOfLivingInfo;
         String dayOfDeathInfo;
         try {
@@ -241,10 +242,6 @@ public class DarwinPresenter {
                         daysOfLivingInfo + dayOfDeathInfo
 
         );
-    }
-
-    public int getNumOfSim() {
-        return numOfSim;
     }
 
     public void setNumOfSim(int numOfSim) {
@@ -285,14 +282,14 @@ public class DarwinPresenter {
         }
     }
 
-    public void startTheSim(){
+    public void startTheSim() {
         timeline = new Timeline(
                 new KeyFrame(Duration.seconds(0.1), event -> {
-                    if (map.getAnimalNumber() == 0){
+                    if (map.getAnimalNumber() == 0) {
                         timeline.stop();
                     }
-                    if (!paused){
-                        dayLabel.setText(Integer.toString(dayCounter));
+                    if (!paused) {
+                        dayLabel.setText("Obecny dzien: " + dayCounter);
                         map.setCurrentDay(dayCounter);
                         dayCounter += 1;
                         map.deleteDeadAnimals();
@@ -301,7 +298,7 @@ public class DarwinPresenter {
                         map.animalReproduce();
                         map.growPlants();
                         drawMap();
-                        if (savingToFile){
+                        if (savingToFile) {
                             saveDataToFile();
                         }
                     }
@@ -309,7 +306,6 @@ public class DarwinPresenter {
         );
         timeline.setCycleCount(Animation.INDEFINITE); // Run indefinitely
         timeline.play();
-       }
+    }
 
 }
-

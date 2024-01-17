@@ -13,8 +13,9 @@ public class Plant implements MapElement {
     public Vector2d getPosition() {
         return position;
     }
+
     @Override
-    public String toString(){
+    public String toString() {
         return position.toString();
     }
 }

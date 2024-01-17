@@ -11,6 +11,7 @@ import java.io.IOException;
 public class SettingsWindow extends Application {
 
     private SettingsPresenter presenter = new SettingsPresenter();
+
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("Settings.fxml"));
@@ -28,9 +29,4 @@ public class SettingsWindow extends Application {
         primaryStage.minWidthProperty().bind(viewRoot.minWidthProperty());
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
-
-    public SettingsPresenter getPresenter(){
-        return presenter;
-    }
-
 }

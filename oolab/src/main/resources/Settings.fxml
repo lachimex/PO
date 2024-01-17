@@ -3,95 +3,107 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane fx:id="root" minHeight="900" minWidth="1600" stylesheets="Settings.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.SettingsPresenter">
 
     <top>
-        <Label fx:id="errorInfo" BorderPane.alignment="CENTER" />
+        <Label fx:id="errorInfo" BorderPane.alignment="CENTER">
+         <font>
+            <Font size="24.0" />
+         </font>
+         <BorderPane.margin>
+            <Insets bottom="29.0" />
+         </BorderPane.margin></Label>
     </top>
-    <left>
-        <Button onAction="#saveCurrentValuesToFile">zapisz konfiguracje</Button>
-    </left>
     <center>
         <VBox alignment="CENTER">
 
             <VBox alignment="CENTER">
-                <Label text="Map Height"/>
-                <TextField fx:id="mapHeight" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="30" />
+                <Button onAction="#saveCurrentValuesToFile">zapisz konfiguracje</Button>
+                <TextField fx:id="fileName" style="-fx-max-width: 250;">
+               <VBox.margin>
+                  <Insets bottom="50.0" />
+               </VBox.margin></TextField>
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Map Width"/>
-                <TextField fx:id="mapWidth" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="30" />
+                <Label text="Map Height" />
+                <TextField fx:id="mapHeight" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="30" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Map Variant"/>
+                <Label text="Map Width" />
+                <TextField fx:id="mapWidth" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="30" />
+            </VBox>
+
+            <VBox alignment="CENTER">
+                <Label text="Map Variant" />
                 <ChoiceBox fx:id="mapVariant" style="-fx-max-width: 250;" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Initial number of plants"/>
-                <TextField fx:id="initNumOfPlants" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="100" />
+                <Label text="Initial number of plants" />
+                <TextField fx:id="initNumOfPlants" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="100" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Initial number of animals"/>
-                <TextField fx:id="initNumOfAnimals" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="50" />
+                <Label text="Initial number of animals" />
+                <TextField fx:id="initNumOfAnimals" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="50" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Initial number of energy for the animal"/>
-                <TextField fx:id="initEnergy" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="25" />
+                <Label text="Initial number of energy for the animal" />
+                <TextField fx:id="initEnergy" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="25" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Number of plants grown each day"/>
-                <TextField fx:id="numOfPlantsEachDay" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="20" />
+                <Label text="Number of plants grown each day" />
+                <TextField fx:id="numOfPlantsEachDay" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="20" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Energy gain after eating plant"/>
-                <TextField fx:id="energyGainOnEat" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
+                <Label text="Energy gain after eating plant" />
+                <TextField fx:id="energyGainOnEat" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="10" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Energy needed to reproduce"/>
-                <TextField fx:id="energyNeededToReproduce" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
+                <Label text="Energy needed to reproduce" />
+                <TextField fx:id="energyNeededToReproduce" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="10" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Energy loss after reproduction"/>
-                <TextField fx:id="energyLossDuringReproduction" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="5" />
+                <Label text="Energy loss after reproduction" />
+                <TextField fx:id="energyLossDuringReproduction" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="5" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Minimum number of Mutations"/>
-                <TextField fx:id="minMutations" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="1" />
+                <Label text="Minimum number of Mutations" />
+                <TextField fx:id="minMutations" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="1" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Maximum number of Mutations"/>
-                <TextField fx:id="maxMutations" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
+                <Label text="Maximum number of Mutations" />
+                <TextField fx:id="maxMutations" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="10" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Mutation Variant"/>
+                <Label text="Mutation Variant" />
                 <ChoiceBox fx:id="mutationVariant" style="-fx-max-width: 250;" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="Length of genome"/>
-                <TextField fx:id="genomLength" styleClass="text-field" alignment="CENTER" style="-fx-max-width: 250;" text="10" />
+                <Label text="Length of genome" />
+                <TextField fx:id="genomLength" alignment="CENTER" style="-fx-max-width: 250;" styleClass="text-field" text="10" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="zapisywanie do pliku"/>
+                <Label text="zapisywanie do pliku" />
                 <ChoiceBox fx:id="savingToFile" style="-fx-max-width: 250;" />
             </VBox>
 
             <VBox alignment="CENTER">
-                <Label text="wariant z pliku"/>
+                <Label text="wariant z pliku" />
                 <ChoiceBox fx:id="variantFromFile" style="-fx-max-width: 250;" />
             </VBox>
 

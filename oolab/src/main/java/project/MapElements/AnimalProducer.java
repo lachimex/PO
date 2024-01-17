@@ -23,7 +23,7 @@ public class AnimalProducer {
         }
     }
 
-    public Animal produce(Animal firstParent, Animal secondParent, int currentDay){
+    public Animal produce(Animal firstParent, Animal secondParent, int currentDay) {
         int side = random.nextInt(2); //side of gens from stronger animal 0: left 1: right
         Animal strongerAnimal;
         Animal weakerAnimal;

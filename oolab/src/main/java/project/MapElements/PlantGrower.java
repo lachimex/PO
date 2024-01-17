@@ -6,25 +6,18 @@ import project.Maps.Vector2d;
 import java.util.*;
 
 public class PlantGrower {
-
-    private GlobalSettings globalSettings;
-
     private Set<Vector2d> fieldsSet = new HashSet<>();
     private List<Vector2d> emptyFieldsOutsideJungle = new ArrayList<>();
     private List<Vector2d> emptyFieldsInJungle = new ArrayList<>();
-
     private Map<Vector2d, Plant> plantMap;
-
     private int widthOfGreenArea;
     private int startingRow;
-
     private Random random = new Random();
 
     public PlantGrower(Map<Vector2d, Plant> plantMap, int widthOfGreenArea, int startingRow, GlobalSettings globalSettings) {
         this.plantMap = plantMap;
         this.widthOfGreenArea = widthOfGreenArea;
         this.startingRow = startingRow;
-        this.globalSettings = globalSettings;
         for (int i = 0; i < globalSettings.mapHeight(); i++) {
             for (int j = 0; j < globalSettings.mapWidth(); j++) {
                 fieldsSet.add(new Vector2d(j, i));
@@ -33,7 +26,7 @@ public class PlantGrower {
     }
 
     private Vector2d randomPlantVector(List<Vector2d> emptyFieldsOutsideJungle, List<Vector2d> emptyFieldsInJungle) {
-        if (emptyFieldsOutsideJungle.isEmpty() && emptyFieldsInJungle.isEmpty()){
+        if (emptyFieldsOutsideJungle.isEmpty() && emptyFieldsInJungle.isEmpty()) {
             return null;
         }
         int n = random.nextInt(5);
@@ -62,7 +55,7 @@ public class PlantGrower {
         });
         for (int i = 0; i < n; i++) {
             Vector2d plantVector = randomPlantVector(emptyFieldsOutsideJungle, emptyFieldsInJungle);
-            if (plantVector != null){
+            if (plantVector != null) {
                 plantMap.put(plantVector, new Plant(plantVector));
             }
         }

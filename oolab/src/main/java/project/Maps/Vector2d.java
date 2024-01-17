@@ -10,7 +10,7 @@ public class Vector2d {
 
     private static Random random = new Random();
 
-    public Vector2d(int x, int y){
+    public Vector2d(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -28,53 +28,53 @@ public class Vector2d {
         return "(" + x + ", " + y + ")";
     }
 
-    public boolean precedes(Vector2d other){
-        if (other == null){
+    public boolean precedes(Vector2d other) {
+        if (other == null) {
             return false;
         }
         return this.x <= other.x && this.y <= other.y;
     }
 
-    public boolean follows(Vector2d other){
-        if (other == null){
+    public boolean follows(Vector2d other) {
+        if (other == null) {
             return false;
         }
         return this.x >= other.x && this.y >= other.y;
     }
 
-    public Vector2d add(Vector2d other){
-        if (other == null){
+    public Vector2d add(Vector2d other) {
+        if (other == null) {
             return null;
         }
         return new Vector2d(this.x + other.x, this.y + other.y);
     }
 
-    public Vector2d subtract(Vector2d other){
-        if (other == null){
+    public Vector2d subtract(Vector2d other) {
+        if (other == null) {
             return null;
         }
         return new Vector2d(this.x - other.x, this.y - other.y);
     }
 
-    public Vector2d upperRight(Vector2d other){
-        if (other == null){
+    public Vector2d upperRight(Vector2d other) {
+        if (other == null) {
             return null;
         }
         return new Vector2d(Math.max(this.x, other.x), Math.max(this.y, other.y));
     }
 
-    public Vector2d lowerLeft(Vector2d other){
-        if (other == null){
+    public Vector2d lowerLeft(Vector2d other) {
+        if (other == null) {
             return null;
         }
         return new Vector2d(Math.min(this.x, other.x), Math.min(this.y, other.y));
     }
 
-    public Vector2d opposite(){
+    public Vector2d opposite() {
         return new Vector2d(-this.x, -this.y);
     }
 
-    public boolean equals(Object other){
+    public boolean equals(Object other) {
         if (this == other)
             return true;
         if (!(other instanceof Vector2d that))
@@ -82,11 +82,11 @@ public class Vector2d {
         return this.x == that.x && this.y == that.y;
     }
 
-    public int hashCode(){
+    public int hashCode() {
         return Objects.hash(this.x, this.y);
     }
 
-    public static Vector2d generateRandomVector(int boundX, int boundY){
+    public static Vector2d generateRandomVector(int boundX, int boundY) {
         return new Vector2d(random.nextInt(boundX), random.nextInt(boundY));
     }
 }

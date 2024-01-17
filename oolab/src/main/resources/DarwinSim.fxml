@@ -3,6 +3,7 @@
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
 <BorderPane fx:id="root" minHeight="900" minWidth="1600" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.PresentersAndWindows.DarwinPresenter">
 
@@ -12,6 +13,12 @@
                 <BorderPane.margin>
                     <Insets left="100.0" />
                 </BorderPane.margin>
+            <font>
+               <Font size="30.0" />
+            </font>
+            <VBox.margin>
+               <Insets left="100.0" />
+            </VBox.margin>
             </Label>
         </VBox>
     </left>
@@ -20,12 +27,21 @@
         <Label fx:id="animalSpecificInfo" textAlignment="CENTER" BorderPane.alignment="CENTER">
          <padding>
             <Insets right="100.0" />
-         </padding></Label>
+         </padding>
+         <font>
+            <Font size="30.0" />
+         </font></Label>
     </right>
 
     <center>
         <VBox alignment="CENTER">
-            <Label fx:id="dayLabel" textAlignment="CENTER" />
+            <Label fx:id="dayLabel" textAlignment="CENTER">
+            <VBox.margin>
+               <Insets bottom="100.0" />
+            </VBox.margin>
+            <font>
+               <Font size="24.0" />
+            </font></Label>
             <HBox alignment="CENTER">
                 <GridPane fx:id="mapGrid" gridLinesVisible="true" />
             </HBox>

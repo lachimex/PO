@@ -18,6 +18,7 @@ public class DarwinWindow extends Application {
     }
 
     private DarwinPresenter presenter = new DarwinPresenter();
+
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(getClass().getClassLoader().getResource("DarwinSim.fxml"));
@@ -37,7 +38,7 @@ public class DarwinWindow extends Application {
         primaryStage.minHeightProperty().bind(viewRoot.minHeightProperty());
     }
 
-    public DarwinPresenter getPresenter(){
+    public DarwinPresenter getPresenter() {
         return presenter;
     }
 

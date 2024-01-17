@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Random;
 
 public class Animal implements MapElement {
-    GlobalSettings globalSettings;
+    private GlobalSettings globalSettings;
     private List<Integer> genList;
     private List<Animal> childList = new ArrayList<>();
     private static Random random = new Random();
@@ -21,7 +21,7 @@ public class Animal implements MapElement {
     private int energy;
     private int childCounter;
     private int plantEatenCounter;
-    public int age;
+    private int age;
     boolean alive;
     private Integer dayOfDeath = null;
     private Integer lifeSpan = null;
@@ -56,8 +56,7 @@ public class Animal implements MapElement {
     }
 
     public void move() {
-        direction = MapDirection.intToMapDirection(
-                genList.get(activeGen % genList.size()));
+        direction = MapDirection.intToMapDirection(genList.get(activeGen % genList.size()));
         position = position.add(direction.toUnitVector());
         if (globalSettings.behaviourVariant().equals(BehaviourVariant.LITTLE_BIT_OF_CRAZINESS)) {
             if (random.nextInt(5) == 4) {
@@ -70,8 +69,8 @@ public class Animal implements MapElement {
         }
         energy--;
     }
-    
-    void addChild(Animal descendant){
+
+    public void addChild(Animal descendant) {
         childList.add(descendant);
     }
 
@@ -116,7 +115,7 @@ public class Animal implements MapElement {
         return childCounter;
     }
 
-    public List<Animal> getChildList(){
+    public List<Animal> getChildList() {
         return childList;
     }
 
@@ -154,16 +153,16 @@ public class Animal implements MapElement {
         return genList;
     }
 
-    public int getGenListSize(){
+    public int getGenListSize() {
         return genList.size();
     }
 
-    public void setChildCounter(int childCounter){
+    public void setChildCounter(int childCounter) {
         this.childCounter = childCounter;
     }
 
     public int getActiveGen() {
-        return activeGen;
+        return activeGen % genList.size();
     }
 
     public int getPlantEatenCounter() {
@@ -179,7 +178,7 @@ public class Animal implements MapElement {
     }
 
     @Override
-    public String toString(){
-        return position.toString() + " " + direction.toString();
+    public String toString() {
+        return position.toString() + " " + direction.toString() + "Energy: " + energy;
     }
 }

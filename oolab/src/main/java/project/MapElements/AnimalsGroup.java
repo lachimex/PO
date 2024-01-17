@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class AnimalsGroup {
     Vector2d position;
     List<Animal> animalList = new ArrayList<>();
+    AnimalComparator animalComparator = new AnimalComparator();
 
     public AnimalsGroup(Vector2d position) {
         this.position = position;
@@ -34,36 +35,9 @@ public class AnimalsGroup {
 
     public Animal figureOutEatingConflict(){
         if (getSize() > 1){
-            animalList.sort(Comparator.comparingInt(Animal::getEnergy).reversed());
-            List<Animal> animalsWithMostEnergy = new ArrayList<>(animalList.subList(0, 2));
-            Animal animal1 = animalsWithMostEnergy.get(0);
-            Animal animal2 = animalsWithMostEnergy.get(1);
-            if (animal1.getEnergy() == animal2.getEnergy()){
-                if (animal1.getAge() > animal2.getAge()){
-                    return animal1;
-                } else if (animal2.getAge() > animal1.getAge()) {
-                    return animal2;
-                }
-                else{
-                    if (animal1.getChildCounter() > animal2.getChildCounter()){
-                        return animal1;
-                    }
-                    else if (animal2.getChildCounter() > animal1.getChildCounter()){
-                        return animal2;
-                    }
-                    else{
-                        Random random = new Random();
-                        if (random.nextInt(2) == 0){
-                            return animal1;
-                        }
-                        else{
-                            return animal2;
-                        }
-                    }
-                }
-            }
+            animalList.sort(animalComparator.reversed());
         }
-            return animalList.get(0);
+        return animalList.get(0);
     }
 
     public List<Animal> figureOutAnimalReproductionConflict(){

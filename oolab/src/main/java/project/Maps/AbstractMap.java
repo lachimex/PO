@@ -14,10 +14,9 @@ public abstract class AbstractMap {
     protected int widthOfGreenArea;
     protected int startingRow;
 
-    Map<Vector2d, AnimalsGroup> animalsMap = new HashMap<>();
-    Map<Vector2d, Plant> plantMap = new HashMap<>();
-    List<Animal> deadAnimals = new ArrayList<>();
-    static Random random = new Random();
+    protected Map<Vector2d, AnimalsGroup> animalsMap = new HashMap<>();
+    protected Map<Vector2d, Plant> plantMap = new HashMap<>();
+    protected List<Animal> deadAnimals = new ArrayList<>();
 
     public AbstractMap(GlobalSettings globalSettings) {
         this.globalSettings = globalSettings;
@@ -79,7 +78,20 @@ public abstract class AbstractMap {
         }));
     }
 
-    public void growPlants(){
+    public void plantConsumption() {
+        animalsMap.forEach((position, animals) -> {
+            Animal wonAnimal;
+            if (plantMap.containsKey(position)) {
+                wonAnimal = figureOutEatingConflict(position);
+                if (wonAnimal != null) {
+                    wonAnimal.eat();
+                    plantMap.remove(position);
+                }
+            }
+        });
+    }
+
+    public void growPlants() {
         PlantGrower plantGrower = new PlantGrower(plantMap, widthOfGreenArea, startingRow, globalSettings);
         plantMap = plantGrower.growNPlants(globalSettings.numberOfPlantsEachDay());
     }
@@ -133,12 +145,12 @@ public abstract class AbstractMap {
         return counter.get();
     }
 
-    public int getDescendantsFromAnimal(Animal animal, Set<Animal> controlSet){
+    public int getDescendantsFromAnimal(Animal animal, Set<Animal> controlSet) {
         int out = 0;
         controlSet.add(animal);
-        for (Animal child : animal.getChildList()){
-            if (!controlSet.contains(child)){
-                out +=  1 + getDescendantsFromAnimal(child, controlSet);
+        for (Animal child : animal.getChildList()) {
+            if (!controlSet.contains(child)) {
+                out += 1 + getDescendantsFromAnimal(child, controlSet);
             }
         }
         return out;
@@ -165,10 +177,6 @@ public abstract class AbstractMap {
 
     public int getPlantNumber() {
         return plantMap.values().size();
-    }
-
-    public int getCurrentDay() {
-        return currentDay;
     }
 
     public int getWidthOfGreenArea() {

@@ -72,6 +72,8 @@ public class SettingsPresenter {
     private Label errorInfo;
     @FXML
     private ChoiceBox<String> variantFromFile;
+    @FXML
+    private TextField fileName;
 
     private DarwinWindow darwinWindow;
     private int numOfSim = 1;
@@ -79,16 +81,24 @@ public class SettingsPresenter {
     private GlobalSettings globalSettings;
 
     private List<String> listFilesForFolder(final File folder) {
-        System.out.println(folder.isDirectory());
         if (folder.listFiles() == null) {
             return filenames;
         }
+        filenames.clear();
         for (File file : folder.listFiles()) {
             if (file.getName().contains(".csv")) {
                 filenames.add(file.getName());
             }
         }
         return filenames;
+    }
+
+    private void updateFilePaths() {
+        List<String> filesList = listFilesForFolder(new File("csv_files/"));
+        ObservableList<String> settingsFiles = FXCollections.observableArrayList("brak");
+        settingsFiles.addAll(filesList);
+        variantFromFile.setItems(settingsFiles);
+        variantFromFile.setValue("brak");
     }
 
     @FXML
@@ -113,11 +123,7 @@ public class SettingsPresenter {
         savingToFile.setValue(false);
         String basePath = new File("").getAbsolutePath();
         System.out.println(basePath);
-        List<String> filesList = listFilesForFolder(new File("csv_files/"));
-        ObservableList<String> settingsFiles = FXCollections.observableArrayList("brak");
-        settingsFiles.addAll(filesList);
-        variantFromFile.setItems(settingsFiles);
-        variantFromFile.setValue("brak");
+        updateFilePaths();
     }
 
     private boolean parseSettings() {
@@ -143,18 +149,24 @@ public class SettingsPresenter {
         return checkSettings(globalSettings);
     }
 
-    public void startTheSim() throws IOException {
+    public void startTheSim() {
         if (parseSettings()) {
-            if (!variantFromFile.getValue().equals("brak")){
+            if (!variantFromFile.getValue().equals("brak")) {
                 startTheSimFromCSVFile();
-            }
-            else{
-                startTheSimFromGlobalSettings(globalSettings);
+            } else {
+                try {
+                    startTheSimFromGlobalSettings(globalSettings);
+                } catch (IOException e) {
+                    errorInfo.setText("cos poszlo nie tak podczas odpalania symulacji");
+                }
             }
         }
     }
 
-    boolean checkSettings(GlobalSettings settings) {
+    private boolean checkSettings(GlobalSettings settings) {
+        if (globalSettings == null) {
+            return false;
+        }
         if (settings.mapHeight() <= 0) {
             mapHeight.setStyle("-fx-border-color: red; -fx-max-width: 250;");
             errorInfo.setText("Wysokość musi być większa od 0.");
@@ -291,36 +303,40 @@ public class SettingsPresenter {
     }
 
     @FXML
-    void saveCurrentValuesToFile() {
-        if (!parseSettings()){
+    private void saveCurrentValuesToFile() {
+        if (!parseSettings()) {
             return;
         }
-            Path filePath = Path.of("csv_files/settings" + LocalTime.now().getHour() + LocalTime.now().getMinute() + LocalTime.now().getSecond() + ".csv");
-            try (FileWriter out = new FileWriter(String.valueOf(filePath))) {
-                out.write(
-                        "wysokosc,szerokosc,map_variant,init_plants,init_animals,init_animal_energy,plants_each_day,gain_after_plant,energy_needed_to_reproduce,energy_loss_after_reproduction,min_mutations,max_mutations,mutation_variant,gen_length,zapisywanie_do_pliku\n"
-                                + globalSettings.mapHeight() + ","
-                                + globalSettings.mapWidth() + ","
-                                + globalSettings.mapVariant() + ","
-                                + globalSettings.initialNumberOfPlants() + ","
-                                + globalSettings.initialNumberOfAnimals() + ","
-                                + globalSettings.initialEnergy() + ","
-                                + globalSettings.numberOfPlantsEachDay() + ","
-                                + globalSettings.energyGainOnEat() + ","
-                                + globalSettings.energyNeededToReproduce() + ","
-                                + globalSettings.energyLossDuringReproduction() + ","
-                                + globalSettings.minimalNumberOfMutations() + ","
-                                + globalSettings.maximumNumberOfMutations() + ","
-                                + globalSettings.behaviourVariant() + ","
-                                + globalSettings.genomLength() + ","
-                                + savingToFile.getValue()
-                );
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (fileName.getText().isEmpty()) {
+            return;
         }
+        Path filePath = Path.of("csv_files/settings_" + fileName.getText() + ".csv");
+        try (FileWriter out = new FileWriter(String.valueOf(filePath))) {
+            out.write(
+                    "wysokosc,szerokosc,map_variant,init_plants,init_animals,init_animal_energy,plants_each_day,gain_after_plant,energy_needed_to_reproduce,energy_loss_after_reproduction,min_mutations,max_mutations,mutation_variant,gen_length,zapisywanie_do_pliku\n"
+                            + globalSettings.mapHeight() + ","
+                            + globalSettings.mapWidth() + ","
+                            + globalSettings.mapVariant() + ","
+                            + globalSettings.initialNumberOfPlants() + ","
+                            + globalSettings.initialNumberOfAnimals() + ","
+                            + globalSettings.initialEnergy() + ","
+                            + globalSettings.numberOfPlantsEachDay() + ","
+                            + globalSettings.energyGainOnEat() + ","
+                            + globalSettings.energyNeededToReproduce() + ","
+                            + globalSettings.energyLossDuringReproduction() + ","
+                            + globalSettings.minimalNumberOfMutations() + ","
+                            + globalSettings.maximumNumberOfMutations() + ","
+                            + globalSettings.behaviourVariant() + ","
+                            + globalSettings.genomLength() + ","
+                            + savingToFile.getValue()
+            );
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        updateFilePaths();
+    }
 
-    void startTheSimFromGlobalSettings(GlobalSettings globalSettings) throws IOException {
+    private void startTheSimFromGlobalSettings(GlobalSettings globalSettings) throws IOException {
         errorInfo.setText("wszystko gra, startujemy z symulacja");
         darwinWindow = new DarwinWindow(globalSettings);
         darwinWindow.start(new Stage());
@@ -340,7 +356,7 @@ public class SettingsPresenter {
         darwinWindow.getPresenter().startTheSim();
     }
 
-    void startTheSimFromCSVFile() {
+    private void startTheSimFromCSVFile() {
         String filePath = "csv_files/" + variantFromFile.getValue();
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String[] columnTitles = reader.readLine().split(",");
@@ -367,9 +383,7 @@ public class SettingsPresenter {
                     Integer.parseInt(dataMap.get("gen_length")),
                     Boolean.parseBoolean(dataMap.get("zapisywanie_do_pliku"))
             );
-        startTheSimFromGlobalSettings(fileSettings);
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
+            startTheSimFromGlobalSettings(fileSettings);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
