@@ -67,11 +67,6 @@ public class TunnelsMap extends AbstractMap implements MapInterface{
                 }}});
     }
 
-    @Override
-    public void growPlants() {
-        super.growNPlants(globalSettings.numberOfPlantsEachDay());
-    }
-
     public Map<Vector2d, Vector2d> getTunnelMap(){
         return tunnelMap;
     }

@@ -15,7 +15,7 @@ public class AnimalsGroupTest {
     GlobalSettings globalSettings = new GlobalSettings(3, 3, MapVariant.GLOBE,
             1, 1, 1, 1, 1,
             1, 1, 1, 1,
-            BehaviourVariant.LITTLE_BIT_OF_CRAZINESS, 1);
+            BehaviourVariant.LITTLE_BIT_OF_CRAZINESS, 1, false);
     Vector2d position = new Vector2d(2, 3);
     List<Integer> genList = Animal.generateRandomGenList(5);
     Animal animal1 = new Animal(genList, position, 60, globalSettings);

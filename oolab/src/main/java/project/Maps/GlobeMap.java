@@ -5,10 +5,12 @@ import javafx.application.Platform;
 import project.GlobalSettings;
 import project.MapElements.Animal;
 import project.MapElements.AnimalsGroup;
+import project.MapElements.PlantGrower;
 
 import java.util.*;
 
 public class GlobeMap extends AbstractMap implements MapInterface{
+
     public GlobeMap(GlobalSettings globalSettings) {
         super(globalSettings);
     }
@@ -56,11 +58,6 @@ public class GlobeMap extends AbstractMap implements MapInterface{
                 plantMap.remove(position);
             }
         }});
-    }
-
-    @Override
-    public void growPlants() {
-        super.growNPlants(globalSettings.numberOfPlantsEachDay());
     }
 
 }

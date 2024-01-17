@@ -2,25 +2,20 @@ package project.Maps;
 
 import project.Exceptions.AnimalNotDeadYetException;
 import project.GlobalSettings;
-import project.MapElements.Animal;
-import project.MapElements.AnimalsGroup;
-import project.MapElements.Plant;
+import project.MapElements.*;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public abstract class AbstractMap {
+
     protected final GlobalSettings globalSettings;
     protected int currentDay;
     protected int widthOfGreenArea;
     protected int startingRow;
-    private List<Vector2d> emptyFieldsOutsideJungle = new ArrayList<>();
-    private List<Vector2d> emptyFieldsInJungle = new ArrayList<>();
-
 
     Map<Vector2d, AnimalsGroup> animalsMap = new HashMap<>();
     Map<Vector2d, Plant> plantMap = new HashMap<>();
-    Set<Vector2d> fieldsSet = new HashSet<>();
     List<Animal> deadAnimals = new ArrayList<>();
     static Random random = new Random();
 
@@ -37,11 +32,6 @@ public abstract class AbstractMap {
                 widthOfGreenArea = 1;
             }
             this.startingRow = globalSettings.mapHeight() / 2 - widthOfGreenArea / 2;
-        }
-        for (int i = 0; i < globalSettings.mapHeight(); i++) {
-            for (int j = 0; j < globalSettings.mapWidth(); j++) {
-                fieldsSet.add(new Vector2d(j, i));
-            }
         }
     }
 
@@ -64,7 +54,8 @@ public abstract class AbstractMap {
             newAnimal.setBornDay(currentDay);
             addAnimal(randomVector, newAnimal);
         }
-        growNPlants(numberOfPlants);
+        PlantGrower plantGrower = new PlantGrower(plantMap, widthOfGreenArea, startingRow, globalSettings);
+        plantMap = plantGrower.growNPlants(numberOfPlants);
     }
 
     public void deleteDeadAnimals() {
@@ -76,15 +67,21 @@ public abstract class AbstractMap {
     }
 
     public void animalReproduce() {
+        AnimalProducer animalProducer = new AnimalProducer(globalSettings);
         animalsMap.forEach(((position, animalsGroup) -> {
             if (animalsGroup.getSize() >= 2) {
                 List<Animal> animalList = figureOutAnimalReproductionConflict(position);
-                Animal animal = animalList.get(0).produce(animalList.get(1), currentDay);
+                Animal animal = animalProducer.produce(animalList.get(0), animalList.get(1), currentDay);
                 if (animal != null) {
                     animalsGroup.addAnimal(animal);
                 }
             }
         }));
+    }
+
+    public void growPlants(){
+        PlantGrower plantGrower = new PlantGrower(plantMap, widthOfGreenArea, startingRow, globalSettings);
+        plantMap = plantGrower.growNPlants(globalSettings.numberOfPlantsEachDay());
     }
 
     public int getAverageEnergy() {
@@ -102,37 +99,6 @@ public abstract class AbstractMap {
 
     public Animal figureOutEatingConflict(Vector2d position) {
         return animalsMap.get(position).figureOutEatingConflict();
-    }
-
-    private Vector2d randomPlantVector(List<Vector2d> emptyFieldsOutsideJungle, List<Vector2d> emptyFieldsInJungle) {
-        int n = random.nextInt(5);
-        if (!emptyFieldsInJungle.isEmpty()) {
-            if (n != 4) {
-                Vector2d removed = emptyFieldsInJungle.remove(random.nextInt(emptyFieldsInJungle.size()));
-                return removed;
-            }
-        }
-        Vector2d removed = emptyFieldsOutsideJungle.remove(random.nextInt(emptyFieldsOutsideJungle.size()));
-        return removed;
-    }
-
-    protected void growNPlants(int n) {
-        Set<Vector2d> plantSet = plantMap.keySet();
-        Set<Vector2d> freeFields = new HashSet<>(fieldsSet);
-        freeFields.removeAll(plantSet);
-        emptyFieldsInJungle.clear();
-        emptyFieldsOutsideJungle.clear();
-        freeFields.forEach(vector2d -> {
-            if (startingRow <= vector2d.getY() && vector2d.getY() < startingRow + widthOfGreenArea) {
-                emptyFieldsInJungle.add(vector2d);
-            } else {
-                emptyFieldsOutsideJungle.add(vector2d);
-            }
-        });
-        for (int i = 0; i < n; i++) {
-            Vector2d plantVector = randomPlantVector(emptyFieldsOutsideJungle, emptyFieldsInJungle);
-            plantMap.put(plantVector, new Plant(plantVector));
-        }
     }
 
     public String getMostPopularGenotype() {
@@ -157,14 +123,6 @@ public abstract class AbstractMap {
             }
         }
         return mostPopularGenotype.toString();
-    }
-
-    public Map<Vector2d, AnimalsGroup> getAnimalsMap() {
-        return animalsMap;
-    }
-
-    public Map<Vector2d, Plant> getPlantMap() {
-        return plantMap;
     }
 
     public int getAnimalNumber() {
@@ -219,5 +177,13 @@ public abstract class AbstractMap {
 
     public int getStartingRowOfGreenArea() {
         return startingRow;
+    }
+
+    public Map<Vector2d, AnimalsGroup> getAnimalsMap() {
+        return animalsMap;
+    }
+
+    public Map<Vector2d, Plant> getPlantMap() {
+        return plantMap;
     }
 }

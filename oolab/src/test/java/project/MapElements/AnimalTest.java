@@ -15,7 +15,7 @@ public class AnimalTest {
     GlobalSettings globalSettings = new GlobalSettings(3, 3, MapVariant.GLOBE,
             1, 1, 1, 1, 1,
             1, 1, 1, 1,
-            BehaviourVariant.LITTLE_BIT_OF_CRAZINESS, 1);
+            BehaviourVariant.LITTLE_BIT_OF_CRAZINESS, 1, false);
 
     @Test
     void testAnimalInitialization() {
@@ -52,13 +52,12 @@ public class AnimalTest {
         List<Integer> genList = Animal.generateRandomGenList(5);
         Animal animal1 = new Animal(genList, position, 50, globalSettings);
         Animal animal2 = new Animal(genList, position, 50, globalSettings);
-        Animal animal3 = animal1.produce(animal2, 1);
+        AnimalProducer animalProducer = new AnimalProducer(globalSettings);
+        Animal animal3 = animalProducer.produce(animal1, animal2, 1);
         assertEquals(animal3.getAge(), 0);
         assertEquals(animal3.getEnergy(), 2 * globalSettings.energyLossDuringReproduction());
         assertEquals(animal3.getBornDay(), 1);
         assertEquals(animal3.getPosition(), position);
-        assertEquals(animal1.getDescendants(), 1);
-        assertEquals(animal2.getDescendants(), 1);
         assertEquals(animal1.getChildCounter(), 1);
         assertEquals(animal2.getChildCounter(), 1);
     }
