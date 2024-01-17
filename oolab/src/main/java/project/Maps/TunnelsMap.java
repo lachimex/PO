@@ -29,7 +29,6 @@ public class TunnelsMap extends AbstractMap implements MapInterface {
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
                 if (tunnelMap.containsKey(animal.getPosition())) {
-                    System.out.println("ANIMAL TELEPORTED FROM " + animal.getPosition() + " TO " + tunnelMap.get(animal.getPosition()));
                     animal.setPosition(tunnelMap.get(animal.getPosition()));
                 } else {
                     if (animal.getPosition().getX() >= globalSettings.mapWidth()) {
