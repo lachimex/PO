@@ -99,7 +99,7 @@ public class DarwinPresenter {
         mapGrid.setAlignment(Pos.CENTER);
         int columns = globalSettings.mapWidth();
         int rows = globalSettings.mapHeight();
-        int cellSize = (int) Math.min((double) 900 / columns, (double) 900 / rows); // max size 900x900
+        int cellSize = (int) Math.min((double) 750 / columns, (double) 750 / rows); // max size 900x900
         for (int col = 0; col <= columns; col++) {
             mapGrid.getColumnConstraints().add(new ColumnConstraints(cellSize));
         }

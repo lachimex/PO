@@ -14,7 +14,7 @@
                     <Insets left="100.0" />
                 </BorderPane.margin>
             <font>
-               <Font size="30.0" />
+               <Font size="15.0" />
             </font>
             <VBox.margin>
                <Insets left="100.0" />
@@ -29,7 +29,7 @@
             <Insets right="100.0" />
          </padding>
          <font>
-            <Font size="30.0" />
+            <Font size="15.0" />
          </font></Label>
     </right>
 
@@ -42,7 +42,7 @@
             <font>
                <Font size="24.0" />
             </font></Label>
-            <HBox alignment="CENTER">
+            <HBox alignment="CENTER" maxHeight="600" maxWidth="900">
                 <GridPane fx:id="mapGrid" gridLinesVisible="true" />
             </HBox>
         </VBox>
