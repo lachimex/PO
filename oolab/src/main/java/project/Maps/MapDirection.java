@@ -21,7 +21,7 @@ public enum MapDirection {
             case SOUTH -> {return "S";}
             case SOUTH_WEST -> {return "SW";}
             case WEST -> {return "W";}
-            case NORTH_WEST -> {return "NW";}
+            case NORTH_WEST -> {return "NW";}  // gdyby tylko to się dało jakoś skrócić...
             default -> throw new IllegalArgumentException("direction not exist in real world");
         }
     }

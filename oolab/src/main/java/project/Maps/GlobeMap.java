@@ -29,7 +29,7 @@ public class GlobeMap extends AbstractMap implements MapInterface {
                 Vector2d prevPosition = animal.getPosition();
                 animal.move();
                 if (animal.getPosition().getX() >= globalSettings.mapWidth()) {
-                    animal.setPosition(new Vector2d(0, animal.getPosition().getY()));
+                    animal.setPosition(new Vector2d(0, animal.getPosition().getY()));  // czy setPosition w Animalu jest bezpieczne?
                 }
                 if (animal.getPosition().getX() < 0) {
                     animal.setPosition(new Vector2d(globalSettings.mapWidth() - 1, animal.getPosition().getY()));

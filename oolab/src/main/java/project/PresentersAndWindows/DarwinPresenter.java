@@ -53,7 +53,7 @@ public class DarwinPresenter {
     private Label animalSpecificInfo;
     private Timeline timeline;
     Animal trackedAnimal;
-    boolean savingToFile = false;
+    boolean savingToFile = false;  // to jest cecha presentera?
     int numOfSim;
 
     public void handlePauseResumeRequest() {

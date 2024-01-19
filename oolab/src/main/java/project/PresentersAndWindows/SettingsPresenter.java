@@ -388,4 +388,4 @@ public class SettingsPresenter {
             throw new RuntimeException(e);
         }
     }
-}
+}  // duże

@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public class AnimalProducer {
-    GlobalSettings globalSettings;
+    private GlobalSettings globalSettings;
     private final Random random = new Random();
 
     public AnimalProducer(GlobalSettings globalSettings) {

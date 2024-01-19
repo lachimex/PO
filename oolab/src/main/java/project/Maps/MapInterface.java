@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public interface MapInterface {
-    void deleteDeadAnimals();
+    void deleteDeadAnimals();  // czy to powinna być metoda mapy?
     void moveEachAnimal();
     void plantConsumption();
     void animalReproduce();

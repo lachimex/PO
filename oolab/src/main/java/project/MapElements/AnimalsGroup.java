@@ -7,9 +7,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class AnimalsGroup {
-    Vector2d position;
-    List<Animal> animalList = new ArrayList<>();
-    AnimalComparator animalComparator = new AnimalComparator();
+    private Vector2d position;
+    private List<Animal> animalList = new ArrayList<>();
+    private static AnimalComparator animalComparator = new AnimalComparator();
 
     public AnimalsGroup(Vector2d position) {
         this.position = position;

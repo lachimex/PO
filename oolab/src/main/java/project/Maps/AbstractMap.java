@@ -80,7 +80,7 @@ public abstract class AbstractMap {
 
     public void plantConsumption() {
         animalsMap.forEach((position, animals) -> {
-            Animal wonAnimal;
+            Animal wonAnimal;  // won? winner? best? strongest?
             if (plantMap.containsKey(position)) {
                 wonAnimal = figureOutEatingConflict(position);
                 if (wonAnimal != null) {

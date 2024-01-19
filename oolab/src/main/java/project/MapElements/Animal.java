@@ -12,7 +12,7 @@ import java.util.Random;
 
 public class Animal implements MapElement {
     private GlobalSettings globalSettings;
-    private List<Integer> genList;
+    private List<Integer> genList;  // to się prosi o osobną klasę na genom
     private List<Animal> childList = new ArrayList<>();
     private static Random random = new Random();
     private MapDirection direction;
@@ -26,7 +26,7 @@ public class Animal implements MapElement {
     private Integer dayOfDeath = null;
     private Integer lifeSpan = null;
     private int bornDay;
-    private boolean ifTracked;
+    private boolean ifTracked;  // czy zwierzę powinno wiedzieć, że jest śledzone?
 
     public Animal(List<Integer> genList, Vector2d position, int energy, GlobalSettings globalSettings) {
         this.genList = genList;
